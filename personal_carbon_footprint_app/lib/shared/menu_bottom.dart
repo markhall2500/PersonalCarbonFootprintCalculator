@@ -12,17 +12,23 @@ class MenuBottom extends StatelessWidget {
         onTap: (int index) {
           switch (index) {
             case 0:
-              Navigator.pushNamed(context, '/');
+              Navigator.pushNamed(context, '/intro');
               break;
             case 1:
               Navigator.pushNamed(context, '/questions');
               break;
+            case 2:
+              Navigator.pushNamed(context, '/results');
+              break;
           }
         },
         items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(
-              icon: Icon(Icons.question_mark), label: 'Questions')
+            icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.question_mark), label: 'Questions'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.bar_chart_rounded), label: 'Results')
         ]);
   }
 }

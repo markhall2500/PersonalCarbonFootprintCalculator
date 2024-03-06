@@ -1,5 +1,5 @@
-import 'package:personal_carbon_footprint_app/shared/menu_drawer.dart';
 import 'package:flutter/material.dart';
+import 'package:personal_carbon_footprint_app/shared/menu_drawer.dart';
 import '../shared/menu_bottom.dart';
 
 //Class which contains the intro screen when a user enters the app

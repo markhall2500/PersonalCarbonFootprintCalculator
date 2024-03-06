@@ -1,8 +1,10 @@
+import 'package:flutter/material.dart';
+import 'package:personal_carbon_footprint_app/data/results.dart';
+import 'package:personal_carbon_footprint_app/data/sp_helper.dart';
 import 'package:personal_carbon_footprint_app/helpers/questions_calculations.dart';
 import 'package:personal_carbon_footprint_app/helpers/questions_validators.dart';
-import 'package:personal_carbon_footprint_app/shared/menu_drawer.dart';
-import 'package:flutter/material.dart';
 import 'package:personal_carbon_footprint_app/shared/globals.dart';
+import 'package:personal_carbon_footprint_app/shared/menu_drawer.dart';
 import '../shared/menu_bottom.dart';
 
 //Stateful class which contains the questions for the calculating the
@@ -19,6 +21,7 @@ class _CarbonFootprintQuestionsScreenState
     extends State<CarbonFootprintQuestionsScreen> {
   //This key will be used to identify the state of the form.
   final _formKey = GlobalKey<FormState>();
+  final SPHelper helper = SPHelper();
 
   //Text editing conrolling variables for the text field questions
   final TextEditingController txtNumberOfPeopleInHome = TextEditingController();
@@ -161,8 +164,8 @@ class _CarbonFootprintQuestionsScreenState
                     decoration:
                         InputDecoration(hintText: numberOfPeopleInHomeMessage),
                     validator: (value) {
-                      return 
-                        QuestionsValidators.numberOfPeopleInHouseValidator(value);
+                      return QuestionsValidators.numberOfPeopleInHouseValidator(
+                          value);
                     },
                     keyboardType: TextInputType.number),
               ),
@@ -195,7 +198,7 @@ class _CarbonFootprintQuestionsScreenState
                 padding: const EdgeInsets.all(32.0),
                 child: DropdownButtonFormField(
                   validator: (value) {
-                     return QuestionsValidators.foodHabitsValidator(value);
+                    return QuestionsValidators.foodHabitsValidator(value);
                   },
                   style: TextStyle(
                       fontWeight: FontWeight.bold, fontSize: fontSize),
@@ -243,7 +246,8 @@ class _CarbonFootprintQuestionsScreenState
                 padding: const EdgeInsets.all(32.0),
                 child: DropdownButtonFormField(
                   validator: (value) {
-                     return QuestionsValidators.washingMachineUsageValidator(value);
+                    return QuestionsValidators.washingMachineUsageValidator(
+                        value);
                   },
                   style: TextStyle(
                       fontWeight: FontWeight.bold, fontSize: fontSize),
@@ -267,7 +271,7 @@ class _CarbonFootprintQuestionsScreenState
                 padding: const EdgeInsets.all(32.0),
                 child: DropdownButtonFormField(
                   validator: (value) {
-                     return QuestionsValidators.dishwasherUsageValidator(value);
+                    return QuestionsValidators.dishwasherUsageValidator(value);
                   },
                   style: TextStyle(
                       fontWeight: FontWeight.bold, fontSize: fontSize),
@@ -291,8 +295,8 @@ class _CarbonFootprintQuestionsScreenState
                 padding: const EdgeInsets.all(32.0),
                 child: DropdownButtonFormField(
                   validator: (value) {
-                    return 
-                        QuestionsValidators.newHouseholdItemsValidator(value);
+                    return QuestionsValidators.newHouseholdItemsValidator(
+                        value);
                   },
                   style: TextStyle(
                       fontWeight: FontWeight.bold, fontSize: fontSize),
@@ -322,8 +326,8 @@ class _CarbonFootprintQuestionsScreenState
                     decoration: InputDecoration(
                         hintText: numberOfWheelieBinsFilledMessage),
                     validator: (value) {
-                      return 
-                        QuestionsValidators.numberOfWheelieBinsFilledValidator(value);
+                      return QuestionsValidators
+                          .numberOfWheelieBinsFilledValidator(value);
                     },
                     keyboardType: TextInputType.number),
               ),
@@ -433,8 +437,8 @@ class _CarbonFootprintQuestionsScreenState
                     decoration:
                         InputDecoration(hintText: personalVehicleUsageMessage),
                     validator: (value) {
-                      return 
-                        QuestionsValidators.personalVehicleMilageValidator(value);
+                      return QuestionsValidators.personalVehicleMilageValidator(
+                          value);
                     },
                     keyboardType: TextInputType.number),
               ),
@@ -448,8 +452,8 @@ class _CarbonFootprintQuestionsScreenState
                     decoration:
                         InputDecoration(hintText: publicTransportUsageMessage),
                     validator: (value) {
-                      return 
-                        QuestionsValidators.publicTransportMilageValidator(value);
+                      return QuestionsValidators.publicTransportMilageValidator(
+                          value);
                     },
                     keyboardType: TextInputType.number),
               ),
@@ -458,8 +462,7 @@ class _CarbonFootprintQuestionsScreenState
                 padding: const EdgeInsets.all(32.0),
                 child: DropdownButtonFormField(
                   validator: (value) {
-                    return 
-                        QuestionsValidators.flightsPerYearValidator(value);
+                    return QuestionsValidators.flightsPerYearValidator(value);
                   },
                   style: TextStyle(
                       fontSize: fontSize, fontWeight: FontWeight.bold),
@@ -485,9 +488,18 @@ class _CarbonFootprintQuestionsScreenState
                     onPressed: () {
                       // Validate returns true if the form is valid, or false otherwise.
                       if (_formKey.currentState!.validate()) {
-                        // If the form is valid, display a snackbar. In the real world,
-                        // you'd often call a server or save the information in a database.
-                        calculateCarbonFootprint();
+                        Results result = calculateCarbonFootprint();
+
+                        DateTime now = DateTime.now();
+                        String timestamp =
+                            '${now.year}-${now.month}-${now.day}   ${now.hour}:${now.minute}:${now.second}';
+                        int id = helper.getCounter() + 1;
+                        result.id = id;
+                        result.timestamp = timestamp;
+
+                        helper.writeResults(result).then((_) {
+                          helper.setCounter();
+                        });
                       }
                     },
                     child: Text('Calculate your footprint',
@@ -525,7 +537,7 @@ class _CarbonFootprintQuestionsScreenState
   }
 
   //Method to perform the calculation for the carbon footprint
-  void calculateCarbonFootprint() {
+  Results calculateCarbonFootprint() {
     //Variables to store the points for each field.
     int carbonFootprintResult = 0;
     int numberOfPeopleInHomePoints = 0;
@@ -556,7 +568,7 @@ class _CarbonFootprintQuestionsScreenState
         int.tryParse(txtPersonalVehicleUsage.text) ?? 0;
     int publicTransportUsageInput =
         int.tryParse(txtPublicTransportUsage.text) ?? 0;
-    String flightsUsageInput = selectedHouseholdPurchases.toString();
+    String flightsUsageInput = selectedFlightsUsage.toString();
 
     //Updates to points variables.
     //This is done by calling the calculation methods for each question.
@@ -609,6 +621,24 @@ class _CarbonFootprintQuestionsScreenState
         QuestionsCalculations.calculateImprovementSuggestions(
             improvementSuggestions);
 
+    Results results = Results(
+        1,
+        loggedInUserId,
+        carbonFootprintResult.toString(),
+        carbonFootprintRating,
+        numberOfPeopleInHomeInput,
+        houseSizeInput,
+        foodHabitsInput,
+        foodPackagingInput,
+        washingMachineInput,
+        dishwasherInput,
+        householdPurchasesInput,
+        numberOfWheelieBinsFilledInput,
+        numberOfPeopleInHomeInput,
+        getRecyclingOptionsAsString(recyclingOptionsCheckboxes),
+        personalVehicleUsageInput,
+        publicTransportUsageInput,
+        flightsUsageInput);
     setState(() {
       result = 'Your carbon footprint score is $carbonFootprintResult \n';
       rating = 'Your carbon footprint rating is $carbonFootprintRating';
@@ -616,5 +646,31 @@ class _CarbonFootprintQuestionsScreenState
           'To improve your score and rating further, consider doing the following:\n'
           '$improvementSuggestionsString';
     });
+
+    return results;
+  }
+
+  //!!!!!!!Move to the helper clas???????
+  static getRecyclingOptionsAsString(Map<String, bool?> recyclingOptions) {
+    String recyclingOptionsAsString = '';
+    if (recyclingOptions['Glass'] == true) {
+      recyclingOptionsAsString = '$recyclingOptionsAsString\n   Glass';
+    }
+    if (recyclingOptions['Plastic'] == true) {
+      recyclingOptionsAsString = '$recyclingOptionsAsString\n   Plastic';
+    } 
+    if (recyclingOptions['Paper'] == true) {
+      recyclingOptionsAsString = '$recyclingOptionsAsString\n   Paper';
+    }
+    if (recyclingOptions['Aluminum'] == true) {
+      recyclingOptionsAsString = '$recyclingOptionsAsString\n   Aluminum';
+    } 
+    if (recyclingOptions['Steel'] == true) {
+      recyclingOptionsAsString = '$recyclingOptionsAsString\n   Steel';
+    } 
+    if (recyclingOptions['Food waste'] == true) {
+      recyclingOptionsAsString = '$recyclingOptionsAsString\n   Food waste';
+    }
+    return recyclingOptionsAsString;
   }
 }
