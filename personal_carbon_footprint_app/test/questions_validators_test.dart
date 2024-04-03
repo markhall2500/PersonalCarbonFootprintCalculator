@@ -8,31 +8,31 @@ void main() {
       test('Null value provided', () {
         final result =
             QuestionsValidators.numberOfPeopleInHouseValidator(null);
-        expect(result, 'Please enter a postive number');
+        expect(result, 'Please enter a postive number above 0');
       });
 
       test('Empty value provided', () {
         final result =
             QuestionsValidators.numberOfPeopleInHouseValidator('');
-        expect(result, 'Please enter a postive number');
+        expect(result, 'Please enter a postive number above 0');
       });
 
-      test('Letter value provided', () {
+      test('letter value provided', () {
         final result =
             QuestionsValidators.numberOfPeopleInHouseValidator('a');
-        expect(result, 'Please enter a postive number');
+        expect(result, 'Please enter a postive number above 0');
       });
 
       test('Negative number value provided', () {
         final result =
             QuestionsValidators.numberOfPeopleInHouseValidator('-1');
-        expect(result, 'Please enter a postive number');
+        expect(result, 'Please enter a postive number above 0');
       });
 
       test('Symbol value provided', () {
         final result =
             QuestionsValidators.numberOfPeopleInHouseValidator('%');
-        expect(result, 'Please enter a postive number');
+        expect(result, 'Please enter a postive number above 0');
       });
 
        test('Postive value provided', () {

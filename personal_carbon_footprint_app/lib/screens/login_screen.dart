@@ -113,7 +113,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         String passwordInput = txtPasswordField.text;
 
                         //Check if a username and password match a registered users
-                        users.forEach((user) {
+                        for (var user in users) {
                           if (user.username == usernameInput) {
                             var decryptedPassword =
                                 RegisterValidators.passwordDecryption(
@@ -123,7 +123,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               loggedInUserId = helper.getUserId(user.username);
                             }
                           }
-                        });
+                        }
 
                         //If user is logged in, redirect them to the intro screen
                         if (isLoggedIn) {
@@ -138,9 +138,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           // });
                           errorMessage = "Username or password is incorrect";
                           Visibility(
-                            visible: isCredentialsValid,
-                            child: Text(errorMessage)
-                          ); //!!!ADD A MESSAGE STATING USERNAME OR PASSWORD IS INCORRECT
+                              visible: isCredentialsValid,
+                              child: Text(errorMessage));
                         }
                       }
                     },
@@ -171,8 +170,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             builder: (context) => const IntroScreen()),
                       );
                     },
-                    child:
-                        Text('Continue without registration', style: TextStyle(fontSize: fontSize))),
+                    child: Text('Continue without registration',
+                        style: TextStyle(fontSize: fontSize))),
               ),
             ]),
           ),

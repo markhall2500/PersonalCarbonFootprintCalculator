@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:personal_carbon_footprint_app/data/results.dart';
+import 'package:personal_carbon_footprint_app/data/results_input.dart';
 import 'package:personal_carbon_footprint_app/data/sp_helper.dart';
 import 'package:personal_carbon_footprint_app/helpers/questions_calculations.dart';
 import 'package:personal_carbon_footprint_app/helpers/questions_validators.dart';
@@ -44,7 +46,7 @@ class _CarbonFootprintQuestionsScreenState
 
   //Variables for house size drop down
   List<String> houseSizesDropDown = ['Large', 'Medium', 'Small', 'Apartment'];
-  String? selectedSizeOfHouse = null;
+  String? selectedSizeOfHouse;
 
   //Variables for food choices
   List<String> foodHabitsDropDown = [
@@ -53,7 +55,7 @@ class _CarbonFootprintQuestionsScreenState
     'Vegetarian',
     'Vegan'
   ];
-  String? selectedFoodHabits = null;
+  String? selectedFoodHabits;
 
   //Variables for food packaging choices
   List<String> foodPackagingDropDown = [
@@ -61,7 +63,7 @@ class _CarbonFootprintQuestionsScreenState
     'Balance of prepackaged and fresh food items',
     'Only fresh food items'
   ];
-  String? selectedFoodPackaging = null;
+  String? selectedFoodPackaging;
 
   //Variables for washing machine usage choices
   List<String> washingMachineUsageDropDown = [
@@ -70,7 +72,7 @@ class _CarbonFootprintQuestionsScreenState
     '1-3 times per week',
     'I do not own a washing machine'
   ];
-  String? selectedWashingMachineUsage = null;
+  String? selectedWashingMachineUsage;
 
   //Variables for dishwasher usage choices
   List<String> dishwasherUsageDropDown = [
@@ -79,7 +81,7 @@ class _CarbonFootprintQuestionsScreenState
     '1-3 times per week',
     'I do not own a dishwasher'
   ];
-  String? selectedDishwasherUsage = null;
+  String? selectedDishwasherUsage;
 
   //Variables for dishwasher usage choices
   List<String> householdPurchasesDropDown = [
@@ -89,7 +91,7 @@ class _CarbonFootprintQuestionsScreenState
     'Less than 3 items',
     'Almost nothing or second hand only'
   ];
-  String? selectedHouseholdPurchases = null;
+  String? selectedHouseholdPurchases;
 
   //Variables for flights usage choices
   List<String> flightsUsageDropDown = [
@@ -98,7 +100,7 @@ class _CarbonFootprintQuestionsScreenState
     'Only within Europe',
     'Worldwide'
   ];
-  String? selectedFlightsUsage = null;
+  String? selectedFlightsUsage;
 
   //Variables for dishwasher usage choices
   Map<String, bool?> recyclingOptionsCheckboxes = {
@@ -123,20 +125,20 @@ class _CarbonFootprintQuestionsScreenState
 
     //Scaffold which will build the questions page in the UI
     return Scaffold(
-      appBar: AppBar(title: Text('Carbon Footprint Calculator')),
-      bottomNavigationBar: MenuBottom(),
-      drawer: MenuDrawer(),
+      appBar: AppBar(title: const Text('Carbon Footprint Calculator')),
+      bottomNavigationBar: const MenuBottom(),
+      drawer: const MenuDrawer(),
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
             image: DecorationImage(
-                image: AssetImage('blueSky.jpg'), fit: BoxFit.cover)),
+                image: AssetImage('assets/blueSky.jpg'), fit: BoxFit.cover)),
         child: Form(
           key: _formKey,
           child: SingleChildScrollView(
             child: Column(children: [
               //Title for the page
-              Padding(
-                  padding: const EdgeInsets.all(32.0),
+              const Padding(
+                  padding: EdgeInsets.all(32.0),
                   child: Text(
                     'Carbon Footprint Questions',
                     style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
@@ -145,10 +147,7 @@ class _CarbonFootprintQuestionsScreenState
               Padding(
                   padding: const EdgeInsets.all(32.0),
                   child: Text(
-                    'Complete the questions below to calculate ' +
-                        'your personal carbon footprint. When complete, ' +
-                        'you wil recieve a rating of \nBronze / Silver ' +
-                        '/ Gold / Platinum / Diamond',
+                    'Complete the questions below to calculate your personal carbon footprint. When complete, you wil recieve a rating of \nBronze / Silver / Gold / Platinum / Diamond',
                     style: TextStyle(
                         fontSize: fontSize, fontWeight: FontWeight.bold),
                   )),
@@ -178,7 +177,7 @@ class _CarbonFootprintQuestionsScreenState
                   },
                   style: TextStyle(
                       fontWeight: FontWeight.bold, fontSize: fontSize),
-                  hint: Text('Please select your house size'),
+                  hint: const Text('Please select your house size'),
                   value: selectedSizeOfHouse,
                   onChanged: (newValue) {
                     setState(() {
@@ -202,7 +201,7 @@ class _CarbonFootprintQuestionsScreenState
                   },
                   style: TextStyle(
                       fontWeight: FontWeight.bold, fontSize: fontSize),
-                  hint: Text('Please select your food habits'),
+                  hint: const Text('Please select your food habits'),
                   value: selectedFoodHabits,
                   onChanged: (newValue) {
                     setState(() {
@@ -226,7 +225,7 @@ class _CarbonFootprintQuestionsScreenState
                   },
                   style: TextStyle(
                       fontWeight: FontWeight.bold, fontSize: fontSize),
-                  hint: Text('Please select your food packaging use'),
+                  hint: const Text('Please select your food packaging use'),
                   value: selectedFoodPackaging,
                   onChanged: (newValue) {
                     setState(() {
@@ -251,7 +250,7 @@ class _CarbonFootprintQuestionsScreenState
                   },
                   style: TextStyle(
                       fontWeight: FontWeight.bold, fontSize: fontSize),
-                  hint: Text('How often do you use your washing machine?'),
+                  hint: const Text('How often do you use your washing machine?'),
                   value: selectedWashingMachineUsage,
                   onChanged: (newValue) {
                     setState(() {
@@ -275,7 +274,7 @@ class _CarbonFootprintQuestionsScreenState
                   },
                   style: TextStyle(
                       fontWeight: FontWeight.bold, fontSize: fontSize),
-                  hint: Text('How often do you use your dishwasher?'),
+                  hint: const Text('How often do you use your dishwasher?'),
                   value: selectedDishwasherUsage,
                   onChanged: (newValue) {
                     setState(() {
@@ -301,7 +300,7 @@ class _CarbonFootprintQuestionsScreenState
                   style: TextStyle(
                       fontWeight: FontWeight.bold, fontSize: fontSize),
                   hint:
-                      Text('How many new household items do you buy per year?'),
+                      const Text('How many new household items do you buy per year?'),
                   value: selectedHouseholdPurchases,
                   onChanged: (newValue) {
                     setState(() {
@@ -466,7 +465,7 @@ class _CarbonFootprintQuestionsScreenState
                   },
                   style: TextStyle(
                       fontSize: fontSize, fontWeight: FontWeight.bold),
-                  hint: Text('Where have you taken flights this year?'),
+                  hint: const Text('Where have you taken flights this year?'),
                   value: selectedFlightsUsage,
                   onChanged: (newValue) {
                     setState(() {
@@ -489,10 +488,10 @@ class _CarbonFootprintQuestionsScreenState
                       // Validate returns true if the form is valid, or false otherwise.
                       if (_formKey.currentState!.validate()) {
                         Results result = calculateCarbonFootprint();
-
                         DateTime now = DateTime.now();
-                        String timestamp =
-                            '${now.year}-${now.month}-${now.day}   ${now.hour}:${now.minute}:${now.second}';
+                        String timestamp = DateFormat("dd/MM/yyyy   hh:mm:ss")
+                            .format(now)
+                            .toString();
                         int id = helper.getCounter() + 1;
                         result.id = id;
                         result.timestamp = timestamp;
@@ -538,81 +537,72 @@ class _CarbonFootprintQuestionsScreenState
 
   //Method to perform the calculation for the carbon footprint
   Results calculateCarbonFootprint() {
-    //Variables to store the points for each field.
-    int carbonFootprintResult = 0;
-    int numberOfPeopleInHomePoints = 0;
-    int houseSizePoints = 0;
-    int foodHabitsPoints = 0;
-    int foodPackagingPoints = 0;
-    int washingMachinePoints = 0;
-    int dishwasherPoints = 0;
-    int householdPurchasesPoints = 0;
-    int numberOfWheelieBinsFilledPoints = 0;
-    int personalVehicleUsagePoints = 0;
-    int publicTransportUsagePoints = 0;
-    int flightsUsagePoints = 0;
-    int recyclingOptionsPoints = 0;
-
     //Variables to obtain the values entered on the form.
-    int numberOfPeopleInHomeInput =
+    ResultsInput resultsInput =
+        ResultsInput(0, '', '', '', '', '', '', 0, 0, 0, '', {});
+    resultsInput.numberOfPeopleInHomeInput =
         int.tryParse(txtNumberOfPeopleInHome.text) ?? 0;
-    String houseSizeInput = selectedSizeOfHouse.toString();
-    String foodHabitsInput = selectedFoodHabits.toString();
-    String foodPackagingInput = selectedFoodPackaging.toString();
-    String washingMachineInput = selectedWashingMachineUsage.toString();
-    String dishwasherInput = selectedDishwasherUsage.toString();
-    String householdPurchasesInput = selectedHouseholdPurchases.toString();
-    int numberOfWheelieBinsFilledInput =
+    resultsInput.houseSizeInput = selectedSizeOfHouse.toString();
+    resultsInput.foodHabitsInput = selectedFoodHabits.toString();
+    resultsInput.foodPackagingInput = selectedFoodPackaging.toString();
+    resultsInput.washingMachineInput = selectedWashingMachineUsage.toString();
+    resultsInput.dishwasherInput = selectedDishwasherUsage.toString();
+    resultsInput.householdPurchasesInput =
+        selectedHouseholdPurchases.toString();
+    resultsInput.numberOfWheelieBinsFilledInput =
         int.tryParse(txtNumberOfWheelieBinsFilled.text) ?? 0;
-    int personalVehicleUsageInput =
+    resultsInput.personalVehicleUsageInput =
         int.tryParse(txtPersonalVehicleUsage.text) ?? 0;
-    int publicTransportUsageInput =
+    resultsInput.publicTransportUsageInput =
         int.tryParse(txtPublicTransportUsage.text) ?? 0;
-    String flightsUsageInput = selectedFlightsUsage.toString();
+    resultsInput.flightsUsageInput = selectedFlightsUsage.toString();
+    resultsInput.recyclingOptionsCheckboxesInput = recyclingOptionsCheckboxes;
 
     //Updates to points variables.
     //This is done by calling the calculation methods for each question.
-    numberOfPeopleInHomePoints =
+    int noOfPeopleInHomeScore =
         QuestionsCalculations.calculatePointsForNumberOfPeopleInHome(
-            numberOfPeopleInHomeInput);
-    houseSizePoints = QuestionsCalculations.calculateHouseSize(houseSizeInput);
-    foodHabitsPoints =
-        QuestionsCalculations.calculateFoodHabits(foodHabitsInput);
-    foodPackagingPoints =
-        QuestionsCalculations.calculateFoodPackaging(foodPackagingInput);
-    washingMachinePoints =
-        QuestionsCalculations.calculateWashingMachine(washingMachineInput);
-    dishwasherPoints =
-        QuestionsCalculations.calculateDishwasher(dishwasherInput);
-    householdPurchasesPoints =
+            resultsInput.numberOfPeopleInHomeInput);
+    int houseSizeScore =
+        QuestionsCalculations.calculateHouseSize(resultsInput.houseSizeInput);
+    int foodHabitsScore =
+        QuestionsCalculations.calculateFoodHabits(resultsInput.foodHabitsInput);
+    int packagingUseScore = QuestionsCalculations.calculateFoodPackaging(
+        resultsInput.foodPackagingInput);
+    int washingMachineUsageScore =
+        QuestionsCalculations.calculateWashingMachine(
+            resultsInput.washingMachineInput);
+    int dishwasherUsageScore =
+        QuestionsCalculations.calculateDishwasher(resultsInput.dishwasherInput);
+    int newHouseholdPurchasesScore =
         QuestionsCalculations.calculateHouseholdPurchases(
-            householdPurchasesInput);
-    numberOfWheelieBinsFilledPoints =
+            resultsInput.householdPurchasesInput);
+    int wheelieBinsFilledScore =
         QuestionsCalculations.calculateNumberOfWheelieBinsFilled(
-            numberOfWheelieBinsFilledInput);
-    personalVehicleUsagePoints =
+            resultsInput.numberOfWheelieBinsFilledInput);
+    int personalVehicleMilesScore =
         QuestionsCalculations.calculatePersonalVehicleUsage(
-            personalVehicleUsageInput);
-    publicTransportUsagePoints =
+            resultsInput.personalVehicleUsageInput);
+    int publicTransportMilesScore =
         QuestionsCalculations.calculatePublicTransportUsage(
-            publicTransportUsageInput);
-    flightsUsagePoints =
-        QuestionsCalculations.calculateFlightsUsage(flightsUsageInput);
-    recyclingOptionsPoints = QuestionsCalculations.calculateRecyclingOptions(
+            resultsInput.publicTransportUsageInput);
+    int flightMilesScore = QuestionsCalculations.calculateFlightsUsage(
+        resultsInput.flightsUsageInput);
+    int typesOfRecyclingScore = QuestionsCalculations.calculateRecyclingOptions(
         recyclingOptionsCheckboxes);
 
-    carbonFootprintResult = numberOfPeopleInHomePoints +
-        houseSizePoints +
-        foodHabitsPoints +
-        foodPackagingPoints +
-        washingMachinePoints +
-        dishwasherPoints +
-        householdPurchasesPoints +
-        numberOfWheelieBinsFilledPoints +
-        personalVehicleUsagePoints +
-        publicTransportUsagePoints +
-        flightsUsagePoints +
-        recyclingOptionsPoints;
+    int carbonFootprintResult = noOfPeopleInHomeScore +
+        houseSizeScore +
+        foodHabitsScore +
+        packagingUseScore +
+        washingMachineUsageScore +
+        dishwasherUsageScore +
+        newHouseholdPurchasesScore +
+        wheelieBinsFilledScore +
+        personalVehicleMilesScore +
+        publicTransportMilesScore +
+        flightMilesScore +
+        typesOfRecyclingScore;
 
     String carbonFootprintRating =
         QuestionsCalculations.calculateRating(carbonFootprintResult);
@@ -623,22 +613,40 @@ class _CarbonFootprintQuestionsScreenState
 
     Results results = Results(
         1,
-        loggedInUserId,
         carbonFootprintResult.toString(),
+        loggedInUserId,
         carbonFootprintRating,
-        numberOfPeopleInHomeInput,
-        houseSizeInput,
-        foodHabitsInput,
-        foodPackagingInput,
-        washingMachineInput,
-        dishwasherInput,
-        householdPurchasesInput,
-        numberOfWheelieBinsFilledInput,
-        numberOfPeopleInHomeInput,
+        resultsInput.numberOfPeopleInHomeInput,
+        resultsInput.houseSizeInput,
+        resultsInput.foodHabitsInput,
+        resultsInput.foodPackagingInput,
+        resultsInput.washingMachineInput,
+        resultsInput.dishwasherInput,
+        resultsInput.householdPurchasesInput,
+        resultsInput.numberOfWheelieBinsFilledInput,
         getRecyclingOptionsAsString(recyclingOptionsCheckboxes),
-        personalVehicleUsageInput,
-        publicTransportUsageInput,
-        flightsUsageInput);
+        resultsInput.personalVehicleUsageInput,
+        resultsInput.publicTransportUsageInput,
+        resultsInput.flightsUsageInput,
+        noOfPeopleInHomeScore,
+        houseSizeScore,
+        foodHabitsScore,
+        packagingUseScore,
+        washingMachineUsageScore,
+        dishwasherUsageScore,
+        newHouseholdPurchasesScore,
+        wheelieBinsFilledScore,
+        typesOfRecyclingScore,
+        personalVehicleMilesScore,
+        publicTransportMilesScore,
+        flightMilesScore,
+        0.0);
+
+    //Calculate and update the carbon emissions value based on the inputs
+    double carbonEmissionsValue = 
+      QuestionsCalculations.calculateCarbonEmissionsValue(results);
+    results.carbonEmissionsScore = carbonEmissionsValue;
+
     setState(() {
       result = 'Your carbon footprint score is $carbonFootprintResult \n';
       rating = 'Your carbon footprint rating is $carbonFootprintRating';
@@ -650,7 +658,7 @@ class _CarbonFootprintQuestionsScreenState
     return results;
   }
 
-  //!!!!!!!Move to the helper clas???????
+  //!!!!!!!Move to the questions calculation clas???????
   static getRecyclingOptionsAsString(Map<String, bool?> recyclingOptions) {
     String recyclingOptionsAsString = '';
     if (recyclingOptions['Glass'] == true) {
@@ -658,16 +666,16 @@ class _CarbonFootprintQuestionsScreenState
     }
     if (recyclingOptions['Plastic'] == true) {
       recyclingOptionsAsString = '$recyclingOptionsAsString\n   Plastic';
-    } 
+    }
     if (recyclingOptions['Paper'] == true) {
       recyclingOptionsAsString = '$recyclingOptionsAsString\n   Paper';
     }
     if (recyclingOptions['Aluminum'] == true) {
       recyclingOptionsAsString = '$recyclingOptionsAsString\n   Aluminum';
-    } 
+    }
     if (recyclingOptions['Steel'] == true) {
       recyclingOptionsAsString = '$recyclingOptionsAsString\n   Steel';
-    } 
+    }
     if (recyclingOptions['Food waste'] == true) {
       recyclingOptionsAsString = '$recyclingOptionsAsString\n   Food waste';
     }

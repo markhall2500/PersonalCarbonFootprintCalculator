@@ -32,7 +32,9 @@ dependencies:
     sdk: flutter
   shared_preferences: ^2.2.2
   pointycastle: ^3.7.4
-
+  url_launcher: ^6.2.4
+  fl_chart: ^0.65.0
+  intl: ^0.19.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -66,6 +68,7 @@ flutter:
     - assets/blueSky.jpg
     - assets/environment.jpg
     - assets/lightBlueSky.jpg
+    - assets/water.jpg
     - assets/yellowSand.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see

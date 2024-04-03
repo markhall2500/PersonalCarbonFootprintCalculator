@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:personal_carbon_footprint_app/screens/links_screen.dart';
 import 'package:personal_carbon_footprint_app/screens/login_screen.dart';
 import 'package:personal_carbon_footprint_app/shared/globals.dart';
-import '../screens/carbon_footprint_questions_screen.dart';
+import '../screens/questions_screen.dart';
 import '../screens/intro_screen.dart';
 import '../screens/results_screen.dart';
 
@@ -21,41 +22,45 @@ class MenuDrawer extends StatelessWidget {
       'Home',
       'Carbon Footprint Calculator',
       'Results',
+      'Links',
       'Logout'
     ];
 
     List<Widget> menuItems = [];
-    menuItems.add(DrawerHeader(
+    menuItems.add(const DrawerHeader(
         decoration: BoxDecoration(color: Colors.green),
-        child: Text('Your Precious World',
+        child: Text('Our Precious World',
             style: TextStyle(color: Colors.white, fontSize: 28))));
 
-    menuTitles.forEach((String element) {
+    for (var element in menuTitles) {
       Widget screen = Container();
       menuItems.add(ListTile(
-          title: Text(element, style: TextStyle(fontSize: 18)),
+          title: Text(element, style: const TextStyle(fontSize: 18)),
           onTap: () {
             switch (element) {
               case 'Home':
-                screen = IntroScreen();
+                screen = const IntroScreen();
                 break;
               case 'Carbon Footprint Calculator':
-                screen = CarbonFootprintQuestionsScreen();
+                screen = const CarbonFootprintQuestionsScreen();
                 break;
               case 'Results':
-                screen = ResultsScreen();
+                screen = const ResultsScreen();
+                break;
+              case 'Links':
+                screen = const LinksScreen();
                 break;
               case 'Logout':
                 isLoggedIn = false;
-                loggedInUserId = null;
-                screen = LoginScreen();
-              break;
+                loggedInUserId = 0;
+                screen = const LoginScreen();
+                break;
             }
             Navigator.of(context).pop();
             Navigator.of(context)
                 .push(MaterialPageRoute(builder: (context) => screen));
           }));
-    });
+    }
     return menuItems;
   }
 }

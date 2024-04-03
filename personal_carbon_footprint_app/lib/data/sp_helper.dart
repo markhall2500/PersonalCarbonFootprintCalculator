@@ -1,4 +1,5 @@
 import 'package:personal_carbon_footprint_app/data/user.dart';
+import 'package:personal_carbon_footprint_app/shared/globals.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'results.dart';
 import 'dart:convert';
@@ -44,13 +45,13 @@ class SPHelper {
       }
     });
 
-    int? userId;
-    users.forEach((user) {
+    int userId = 0;
+    for (var user in users) {
       if (user.username == username) {
         userId = user.id;
       }
-    });
-    
+    }
+
     return userId;
   }
 
@@ -74,20 +75,26 @@ class SPHelper {
     prefs.setString('R' + results.id.toString(), jsonEncode(results.toJson()));
   }
 
-  List<Results> getResults() {
-    List<Results> results = [];
-    Set<String> keys = prefs.getKeys();
-    keys.forEach((String key) {
-      //Check to ensure the key is a 'results' ID type
-      if (key != 'resultCounter' &&
-          key != 'userCounter' &&
-          !key.contains('U')) {
-        Results result =
-            Results.fromAnswers(json.decode(prefs.getString(key) ?? ''));
-        results.add(result);
+  List<Results> getResultsForLoggedInUser() {
+    if (isLoggedIn) {
+      List<Results> results = [];
+      Set<String> keys = prefs.getKeys();
+      for (var key in keys) {
+        //Check to ensure the key is a 'results' ID type
+        if (key != 'resultCounter' &&
+            key != 'userCounter' &&
+            !key.contains('U')) {
+          Results result =
+              Results.fromAnswers(json.decode(prefs.getString(key) ?? ''));
+          if (result.userId == loggedInUserId) {
+            results.add(result);
+          }
+        }
       }
-    });
-    return results;
+      return results;
+    } else {
+      return [];
+    }
   }
 
   Future setCounter() async {
@@ -101,6 +108,6 @@ class SPHelper {
   }
 
   Future deleteResult(int id) async {
-    prefs.remove('R' + id.toString());
+    prefs.remove('R$id');
   }
 }

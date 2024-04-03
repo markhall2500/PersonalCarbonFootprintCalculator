@@ -1,8 +1,8 @@
-//A class containing static methods to perform the points calculations
-//on the carbon footprint questions page
-
+import 'package:personal_carbon_footprint_app/data/results.dart';
 import 'package:personal_carbon_footprint_app/shared/globals.dart';
 
+//A class containing static methods to perform the points calculations
+//on the carbon footprint questions page
 class QuestionsCalculations {
   //Private constructor to prevent instantiation
   QuestionsCalculations._();
@@ -70,7 +70,7 @@ class QuestionsCalculations {
         break;
       case 'Vegetarian':
         points = 4;
-        improvementSuggestions.add("Consider beoming a vegan");
+        improvementSuggestions.add("Consider becoming a vegan");
         break;
       case 'Vegan':
         points = 2;
@@ -309,21 +309,21 @@ class QuestionsCalculations {
     return points;
   }
 
-  //Methods to calculate points for the recycilng options result
+  //Methods to calculate points for the recycling options result
   static String calculateRating(int carbonFootprintResult) {
-    if (carbonFootprintResult < 40) {
+    if (carbonFootprintResult < 33) {
       return 'Diamond';
     }
-    if (carbonFootprintResult >= 40 && carbonFootprintResult < 55) {
+    if (carbonFootprintResult >= 33 && carbonFootprintResult < 66) {
       return 'Platinum';
     }
-    if (carbonFootprintResult >= 55 && carbonFootprintResult < 70) {
+    if (carbonFootprintResult >= 66 && carbonFootprintResult < 99) {
       return 'Gold';
     }
-    if (carbonFootprintResult >= 70 && carbonFootprintResult < 85) {
+    if (carbonFootprintResult >= 99 && carbonFootprintResult < 132) {
       return 'Silver';
     }
-    if (carbonFootprintResult >= 85) {
+    if (carbonFootprintResult >= 132) {
       return 'Bronze';
     }
     return 'Invalid result';
@@ -333,11 +333,173 @@ class QuestionsCalculations {
   static String calculateImprovementSuggestions(
       List<String> carbonFootprintResult) {
     String stringToReturn = '';
-    carbonFootprintResult.forEach((element) {
-      stringToReturn = stringToReturn + '> ' + element + '\n';
-    });
+    for (var element in carbonFootprintResult) {
+      stringToReturn = '$stringToReturn> $element\n';
+    }
+    if (stringToReturn == '') {
+      stringToReturn =
+          '> Currently we have no further recommendations for you!\n> Well done!';
+    }
     //Clear the collection to prevent on screen duplication when re-calculating
     improvementSuggestions = [];
     return stringToReturn;
+  }
+
+  //Method to return a calculation in CO2e kg based on the compeleted results
+  static double calculateCarbonEmissionsValue(Results result) {
+    double carbonEmissionsResultInKg = 0.0;
+
+    //Value for food habits
+    switch (result.foodHabits) {
+      case 'Eat meat daily':
+        carbonEmissionsResultInKg = carbonEmissionsResultInKg + 33.25;
+        break;
+      case 'Eat meat a few times a week':
+        carbonEmissionsResultInKg = carbonEmissionsResultInKg + 26.6;
+        break;
+      case 'Vegetarian':
+        carbonEmissionsResultInKg = carbonEmissionsResultInKg + 13.3;
+        break;
+      case 'Vegan':
+        carbonEmissionsResultInKg = carbonEmissionsResultInKg + 6.65;
+        break;
+    }
+
+    //Value for food packaging
+    switch (result.packagingUse) {
+      case 'Mostly Prepackaged convienience food items':
+        carbonEmissionsResultInKg = carbonEmissionsResultInKg + 14.22;
+        break;
+      case 'Balance of prepackaged and fresh food items':
+        carbonEmissionsResultInKg = carbonEmissionsResultInKg + 7.11;
+        break;
+      case 'Only fresh food items':
+        carbonEmissionsResultInKg = carbonEmissionsResultInKg + 2.37;
+        break;
+    }
+
+    //Value for washing machine use
+    switch (result.washingMachineUsage) {
+      case 'More than 9 times per week':
+        carbonEmissionsResultInKg = carbonEmissionsResultInKg + 7.0;
+        break;
+      case '4-9 times per week':
+        carbonEmissionsResultInKg = carbonEmissionsResultInKg + 4.2;
+        break;
+      case '1-3 times per week':
+        carbonEmissionsResultInKg = carbonEmissionsResultInKg + 1.4;
+        break;
+      case 'I do not own a washing machine':
+        carbonEmissionsResultInKg = carbonEmissionsResultInKg + 0.0;
+        break;
+      default:
+        0.0;
+    }
+
+    //Value for dishwasher use
+    switch (result.dishwasherUsage) {
+      case 'More than 9 times per week':
+        carbonEmissionsResultInKg = carbonEmissionsResultInKg + 8.8;
+        break;
+      case '4-9 times per week':
+        carbonEmissionsResultInKg = carbonEmissionsResultInKg + 5.28;
+        break;
+      case '1-3 times per week':
+        carbonEmissionsResultInKg = carbonEmissionsResultInKg + 1.76;
+        break;
+      case 'I do not own a washing machine':
+        carbonEmissionsResultInKg = carbonEmissionsResultInKg + 0.0;
+        break;
+      default:
+        0.0;
+    }
+
+    //Value for new household purchases
+    switch (result.newHouseholdPurchases) {
+      case 'More than 7 new items':
+        carbonEmissionsResultInKg = carbonEmissionsResultInKg + 16.24;
+        break;
+      case '5-7 new items':
+        carbonEmissionsResultInKg = carbonEmissionsResultInKg + 12.18;
+        break;
+      case '3-5 new items':
+        carbonEmissionsResultInKg = carbonEmissionsResultInKg + 8.12;
+        break;
+      case 'Less than 3 items':
+        carbonEmissionsResultInKg = carbonEmissionsResultInKg + 4.06;
+        break;
+      case 'Almost nothing or second hand only':
+        carbonEmissionsResultInKg = carbonEmissionsResultInKg + 2.03;
+        break;
+    }
+
+    //Number of wheelie bins filled
+    switch (result.wheelieBinsFilled) {
+      case 0:
+        carbonEmissionsResultInKg = carbonEmissionsResultInKg + 0.0;
+        break;
+      case 1:
+        carbonEmissionsResultInKg = carbonEmissionsResultInKg + 31.5;
+        break;
+      case 2:
+        carbonEmissionsResultInKg = carbonEmissionsResultInKg + 63;
+        break;
+      case 3:
+        carbonEmissionsResultInKg = carbonEmissionsResultInKg + 94.5;
+        break;
+      case > 3:
+        carbonEmissionsResultInKg = carbonEmissionsResultInKg + 126;
+      default:
+        0.0;
+    }
+
+    //Recycling offsets
+    if (result.typesOfRecycling.contains('Glass')) {
+      carbonEmissionsResultInKg = carbonEmissionsResultInKg - 1.06;
+    }
+    if (result.typesOfRecycling.contains('Plastic')) {
+      carbonEmissionsResultInKg = carbonEmissionsResultInKg - 1.06;
+    }
+    if (result.typesOfRecycling.contains('Paper')) {
+      carbonEmissionsResultInKg = carbonEmissionsResultInKg - 1.06;
+    } 
+    if (result.typesOfRecycling.contains('Aluminum')) {
+      carbonEmissionsResultInKg = carbonEmissionsResultInKg - 1.06;
+    } 
+    if (result.typesOfRecycling.contains('Steel')) {
+      carbonEmissionsResultInKg = carbonEmissionsResultInKg - 1.06;
+    } 
+    if (result.typesOfRecycling.contains('Food waste')) {
+      carbonEmissionsResultInKg = carbonEmissionsResultInKg - 1.06;
+    } 
+
+    //Personal vehicle milage
+    double personalVehicleMileage = 0.07519 * result.personalVehicleMiles;
+    carbonEmissionsResultInKg =
+        carbonEmissionsResultInKg + personalVehicleMileage;
+
+    //Public transport milage
+    double publicTransportMileage = 0.034350 * result.publicTransportMiles;
+    carbonEmissionsResultInKg =
+        carbonEmissionsResultInKg + publicTransportMileage;
+
+    //Flights usage
+    switch (result.flightMiles) {
+      case 'Worldwide':
+        carbonEmissionsResultInKg = carbonEmissionsResultInKg + 76.96;
+        break;
+      case 'Only within Europe':
+        carbonEmissionsResultInKg = carbonEmissionsResultInKg + 38.48;
+        break;
+      case 'Only within the UK':
+        carbonEmissionsResultInKg = carbonEmissionsResultInKg + 9.62;
+        break;
+      case 'No flights':
+        carbonEmissionsResultInKg = carbonEmissionsResultInKg + 0.0;
+        break;
+    }
+
+    //Return collated carbon emissions score
+    return carbonEmissionsResultInKg;
   }
 }

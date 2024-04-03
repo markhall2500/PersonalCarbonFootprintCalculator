@@ -62,15 +62,15 @@ class QuestionsValidators {
   }
 
   static String? numberOfWheelieBinsFilledValidator(String? value){
-     return _checkForPositiveNumber(value);
+     return _checkForPositiveNumberIncludingZero(value);
   }
 
   static String? personalVehicleMilageValidator(String? value){
-    return _checkForPositiveNumber(value);
+    return _checkForPositiveNumberIncludingZero(value);
   }
 
   static String? publicTransportMilageValidator(String? value){
-     return _checkForPositiveNumber(value);
+     return _checkForPositiveNumberIncludingZero(value);
   }
 
   static String? flightsPerYearValidator(String? value){ 
@@ -84,6 +84,16 @@ class QuestionsValidators {
 
   static String? _checkForPositiveNumber(String? value){
     RegExp regexForPositiveInt = RegExp("^[1-9]+[0-9]*\$");
+                      if (value == null ||
+                          value.isEmpty ||
+                          !regexForPositiveInt.hasMatch(value)) {
+                        return 'Please enter a postive number above 0';
+                      }
+                      return null;
+  }
+
+  static String? _checkForPositiveNumberIncludingZero(String? value){
+    RegExp regexForPositiveInt = RegExp("^[0-9]+[0-9]*\$");
                       if (value == null ||
                           value.isEmpty ||
                           !regexForPositiveInt.hasMatch(value)) {
