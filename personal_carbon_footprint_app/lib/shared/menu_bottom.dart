@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-//Class which creates the bottom navigation bar on all pages
+//Class which creates the bottom navigation bar on all pages (except 
+//registration and login pages)
 class MenuBottom extends StatelessWidget {
   const MenuBottom({
     super.key,

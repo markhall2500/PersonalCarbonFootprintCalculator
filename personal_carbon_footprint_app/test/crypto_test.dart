@@ -2,6 +2,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:personal_carbon_footprint_app/helpers/cryptography.dart';
 import 'package:personal_carbon_footprint_app/shared/globals.dart';
 
+//This file contains the tests to check that the password is encrypting and 
+//decrpyting an expected value correctly
 void main() {
   group(
     'Password cryptography -',

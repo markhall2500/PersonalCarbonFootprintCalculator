@@ -1,6 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:personal_carbon_footprint_app/helpers/register_validators.dart';
 
+//This class is checking the validators for the registration page are working
+//correctly when invalid entries are provided the correct error message is
+//returned
 void main(){
   group(
     'Register page fields -',

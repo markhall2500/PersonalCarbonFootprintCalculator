@@ -13,6 +13,7 @@ void main() {
 class CarbonFootprintApp extends StatelessWidget {
   const CarbonFootprintApp({super.key});
 
+  //Builds the app and provide the routes which are present in the system
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

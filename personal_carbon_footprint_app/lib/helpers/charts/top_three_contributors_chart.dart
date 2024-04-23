@@ -4,9 +4,12 @@ import 'package:personal_carbon_footprint_app/data/results.dart';
 import 'package:personal_carbon_footprint_app/data/sp_helper.dart';
 import 'package:personal_carbon_footprint_app/helpers/charts/resources/bar_data.dart';
 
+//This class generates the chart for the highest 3 points contributors to the
+//overall score for the questions answered on the carbon footprint questions page
 class TopThreeContributorsChart extends StatelessWidget {
   const TopThreeContributorsChart({super.key});
 
+  //Building of the top 3 contributors chart
   @override
   Widget build(BuildContext context) {
     BarData myBarData = BarData();
@@ -14,6 +17,10 @@ class TopThreeContributorsChart extends StatelessWidget {
     return BarChart(BarChartData(
         maxY: 50,
         minY: 0,
+        barTouchData: BarTouchData(
+          touchTooltipData: BarTouchTooltipData(
+            tooltipBgColor: Colors.white
+          )),
         titlesData: const FlTitlesData(
             show: true,
             topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
@@ -33,9 +40,11 @@ class TopThreeContributorsChart extends StatelessWidget {
   }
 }
 
+//Method which returns the x-axis titles for the top 3 contributors
 Widget getBottomTitles(double value, TitleMeta meta) {
   final SPHelper helper = SPHelper();
-  Results lastResult = helper.getResultsForLoggedInUser().last; //NEEDED FOR LABELS
+  //Variable to show the labels
+  Results lastResult = helper.getResultsForLoggedInUser().last;
   
    var scores = { 
     'People in home' : lastResult.numberOfPeopleInHomeScore,

@@ -1,7 +1,11 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:personal_carbon_footprint_app/data/results.dart';
 import 'package:personal_carbon_footprint_app/helpers/questions_calculations.dart';
 
+//This class is checking that all of the points calculations which are performed
+//on the carbon footprint questions page and CO2 emissions result are being 
+//returned correctly for their respective options 
 void main() {
   group(
     'Number of people in home form field -',
@@ -105,15 +109,15 @@ void main() {
   group(
     'Food packaging form field -',
     () {
-      test('Mostly Prepackaged convienience food items returns 12 points', () {
+      test('Mostly Prepackaged food returns 12 points', () {
         final result = QuestionsCalculations.calculateFoodPackaging(
-            'Mostly Prepackaged convienience food items');
+            'Mostly Prepackaged food');
         expect(result, 12);
       });
 
-      test('Balance of prepackaged and fresh food items returns 6 points', () {
+      test('Prepackaged and fresh food returns 6 points', () {
         final result = QuestionsCalculations.calculateFoodPackaging(
-            'Balance of prepackaged and fresh food items');
+            'Prepackaged and fresh food');
         expect(result, 6);
       });
 
@@ -140,7 +144,7 @@ void main() {
         expect(result, 2);
       });
 
-      test('1-3 times per week returns 1 points', () {
+      test('1-3 times per week returns 1 point', () {
         final result =
             QuestionsCalculations.calculateWashingMachine('1-3 times per week');
         expect(result, 1);
@@ -169,7 +173,7 @@ void main() {
         expect(result, 2);
       });
 
-      test('1-3 times per week returns 1 points', () {
+      test('1-3 times per week returns 1 point', () {
         final result =
             QuestionsCalculations.calculateDishwasher('1-3 times per week');
         expect(result, 1);
@@ -368,7 +372,7 @@ void main() {
   );
 
   group(
-    'Filghts usage form field -',
+    'Flights usage form field -',
     () {
       test('Worldwide returns 3 points', () {
         final result = QuestionsCalculations.calculateFlightsUsage('Worldwide');
@@ -381,7 +385,7 @@ void main() {
         expect(result, 2);
       });
 
-      test('Only within the UK returns 1 points', () {
+      test('Only within the UK returns 1 point', () {
         final result =
             QuestionsCalculations.calculateFlightsUsage('Only within the UK');
         expect(result, 1);
@@ -515,43 +519,43 @@ void main() {
   group(
     'Rating form label -',
     () {
-      test('Less than 40 returns Diamond', () {
-        final result = QuestionsCalculations.calculateRating(39);
+      test('Less than 33 returns Diamond', () {
+        final result = QuestionsCalculations.calculateRating(32);
         expect(result, 'Diamond');
       });
 
-      test('40 returns Platinum', () {
-        final result = QuestionsCalculations.calculateRating(40);
+      test('33 returns Platinum', () {
+        final result = QuestionsCalculations.calculateRating(33);
         expect(result, 'Platinum');
       });
 
-      test('54 returns Platinum', () {
-        final result = QuestionsCalculations.calculateRating(54);
+      test('65 returns Platinum', () {
+        final result = QuestionsCalculations.calculateRating(65);
         expect(result, 'Platinum');
       });
 
-      test('55 returns Gold', () {
-        final result = QuestionsCalculations.calculateRating(55);
+      test('66 returns Gold', () {
+        final result = QuestionsCalculations.calculateRating(66);
         expect(result, 'Gold');
       });
 
-      test('69 returns Gold', () {
-        final result = QuestionsCalculations.calculateRating(69);
+      test('98 returns Gold', () {
+        final result = QuestionsCalculations.calculateRating(98);
         expect(result, 'Gold');
       });
 
-      test('70 returns Silver', () {
-        final result = QuestionsCalculations.calculateRating(70);
+      test('99 returns Silver', () {
+        final result = QuestionsCalculations.calculateRating(99);
         expect(result, 'Silver');
       });
 
-      test('84 returns Silver', () {
-        final result = QuestionsCalculations.calculateRating(84);
+      test('131 returns Silver', () {
+        final result = QuestionsCalculations.calculateRating(131);
         expect(result, 'Silver');
       });
 
-      test('85 returns Bronze', () {
-        final result = QuestionsCalculations.calculateRating(85);
+      test('132 returns Bronze', () {
+        final result = QuestionsCalculations.calculateRating(132);
         expect(result, 'Bronze');
       });
     },
@@ -569,7 +573,7 @@ void main() {
           4, 
           "Medium", 
           "Eat meat a few times a week", 
-          "Balance of prepackaged and fresh food items",
+          "Prepackaged and fresh food",
           "4-9 times per week",
           "More than 9 times per week",
           "3-5 new items",
@@ -594,7 +598,37 @@ void main() {
           );
 
         final result = QuestionsCalculations.calculateCarbonEmissionsValue(testResult);
-        expect(result, 1287.53);
+        expect(result, 1296.68);
+      });
+    },
+  );
+
+  group(
+    'Rating colour from rating value -',
+    () {
+      test('Diamond returns Diamond colour', () {
+        final result = QuestionsCalculations.getColourFromRating('Diamond');
+        expect(result, const Color.fromRGBO(4, 17, 158, 0.478));
+      });
+
+      test('Platinum returns Platinum colour', () {
+        final result = QuestionsCalculations.getColourFromRating('Platinum');
+        expect(result, const Color.fromRGBO(13, 205, 176, 0.601));
+      });
+
+      test('Gold returns Gold colour', () {
+        final result = QuestionsCalculations.getColourFromRating('Gold');
+        expect(result, const Color.fromRGBO(225, 183, 0, 1));
+      });
+
+      test('Silver returns Silver colour', () {
+        final result = QuestionsCalculations.getColourFromRating('Silver');
+        expect(result, const Color.fromRGBO(76, 77, 77, 0.914));
+      });
+
+      test('Bronze returns Bronze colour', () {
+        final result = QuestionsCalculations.getColourFromRating('Bronze');
+        expect(result, const Color.fromRGBO(194, 121, 4, 0.996));
       });
     },
   );

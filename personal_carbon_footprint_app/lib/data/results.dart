@@ -1,4 +1,7 @@
-//Model for the carbon footprint results
+//This class stores the model for a result object when a user completes
+//the questions on the carbon footprint page. These are used on the results
+//page
+
 class Results {
   int id = 0;
   String timestamp = '';
@@ -13,7 +16,6 @@ class Results {
   String dishwasherUsage = '';
   String newHouseholdPurchases = '';
   int wheelieBinsFilled = 0;
-  int noOfPeopleInHome = 0;
   String typesOfRecycling = '';
   int personalVehicleMiles = 0;
   int publicTransportMiles = 0;
@@ -67,8 +69,8 @@ class Results {
   Results.fromAnswers(Map<String, dynamic> recordMap) {
     id = recordMap['id'] ?? 0;
     timestamp = recordMap['timestamp'] ?? '';
-    userId = recordMap['userId'] ?? 0;
     score = recordMap['score'] ?? '';
+    userId = recordMap['userId'] ?? '';
     rating = recordMap['rating'] ?? '';
     numberOfPeopleInHome = recordMap['numberOfPeopleInHome'] ?? '';
     houseSize = recordMap['houseSize'] ?? '';
@@ -102,8 +104,8 @@ class Results {
     return {
       'id': id,
       'timestamp': timestamp,
-      'userId': userId,
       'score': score,
+      'userId': userId,
       'rating': rating,
       'numberOfPeopleInHome': numberOfPeopleInHome,
       'houseSize': houseSize,

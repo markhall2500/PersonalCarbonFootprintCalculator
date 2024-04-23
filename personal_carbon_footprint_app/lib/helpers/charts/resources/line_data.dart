@@ -2,6 +2,8 @@ import 'package:personal_carbon_footprint_app/data/results.dart';
 import 'package:personal_carbon_footprint_app/data/sp_helper.dart';
 import 'package:personal_carbon_footprint_app/helpers/charts/resources/line_point.dart';
 
+//This class stores the model for the line data to generate the last 10
+//results entries on the line graph
 class LineData {
   final SPHelper helper = SPHelper();
   List<IndividualLine> lineDataTest = [];
@@ -45,7 +47,7 @@ class LineData {
           results[i].typesOfRecyclingScore +
           results[i].flightMilesScore;
 
-      graphEntries[i] = totalScore as double;
+      graphEntries[i] = totalScore.toDouble();
     }
 
     return lineDataTest = [

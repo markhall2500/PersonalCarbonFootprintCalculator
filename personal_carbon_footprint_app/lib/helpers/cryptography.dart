@@ -2,6 +2,7 @@ import 'dart:typed_data';
 import 'package:pointycastle/pointycastle.dart';
 import 'dart:convert';
 
+//This class manages the cryptography side of the user authentication
 class Cryptography {
   //Method which perform the encryption of a password via AES method
   static String encryptPasswordViaAES(String text, String password) {
@@ -32,6 +33,7 @@ class Cryptography {
     return decryptedText;
   }
 
+  //This method encrypts the bytes as part of the encrypt password process
   static Uint8List encryptBytes(BlockCipher cipher, Uint8List input) {
     final blockSize = cipher.blockSize;
     final paddedInput = padBlock(input, blockSize);
@@ -42,6 +44,7 @@ class Cryptography {
     return result;
   }
 
+  //This method encrypts the bytes as part of the decrypt password process
   static Uint8List decryptBytes(BlockCipher cipher, Uint8List input) {
     final blockSize = cipher.blockSize;
     final result = Uint8List(input.length);
@@ -51,6 +54,7 @@ class Cryptography {
     return removePadding(result);
   }
 
+  //This method adds padding as part of the password encryption process
   static Uint8List padBlock(Uint8List input, int blockSize) {
     final padLength = blockSize - (input.length % blockSize);
     final padded = Uint8List(input.length + padLength);
@@ -61,6 +65,7 @@ class Cryptography {
     return padded;
   }
 
+  //This method removes the padding as part of the password decryption process
   static Uint8List removePadding(Uint8List input) {
     final padLength = input.last;
     return input.sublist(0, input.length - padLength);

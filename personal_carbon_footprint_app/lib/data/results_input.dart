@@ -1,3 +1,6 @@
+//This class stores the model for the values for the user input on the 
+//carbon footprint questions page
+
 class ResultsInput {
   int numberOfPeopleInHomeInput = 0;
   String houseSizeInput = '';

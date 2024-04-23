@@ -1,8 +1,10 @@
+import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:personal_carbon_footprint_app/data/results.dart';
 import 'package:personal_carbon_footprint_app/shared/globals.dart';
 
-//A class containing static methods to perform the points calculations
-//on the carbon footprint questions page
+//This class manages the calculations for the questions which are generated
+//as a part of the carbon footprint questions completion process
 class QuestionsCalculations {
   //Private constructor to prevent instantiation
   QuestionsCalculations._();
@@ -83,12 +85,12 @@ class QuestionsCalculations {
   static int calculateFoodPackaging(String foodPackaging) {
     int points = 0;
     switch (foodPackaging) {
-      case 'Mostly Prepackaged convienience food items':
+      case 'Mostly Prepackaged food':
         points = 12;
         improvementSuggestions
             .add("Consider eating more fresh food and less prepacked food");
         break;
-      case 'Balance of prepackaged and fresh food items':
+      case 'Prepackaged and fresh food':
         improvementSuggestions
             .add("Consider switching to only eating fresh food");
         points = 6;
@@ -345,6 +347,87 @@ class QuestionsCalculations {
     return stringToReturn;
   }
 
+  //Method to create a string containing all of the recycling options
+  static getRecyclingOptionsAsString(Map<String, bool?> recyclingOptions) {
+    String recyclingOptionsAsString = '';
+    if (recyclingOptions['Glass'] == true) {
+      recyclingOptionsAsString = '$recyclingOptionsAsString\n   Glass';
+    }
+    if (recyclingOptions['Plastic'] == true) {
+      recyclingOptionsAsString = '$recyclingOptionsAsString\n   Plastic';
+    }
+    if (recyclingOptions['Paper'] == true) {
+      recyclingOptionsAsString = '$recyclingOptionsAsString\n   Paper';
+    }
+    if (recyclingOptions['Aluminum'] == true) {
+      recyclingOptionsAsString = '$recyclingOptionsAsString\n   Aluminum';
+    }
+    if (recyclingOptions['Steel'] == true) {
+      recyclingOptionsAsString = '$recyclingOptionsAsString\n   Steel';
+    }
+    if (recyclingOptions['Food waste'] == true) {
+      recyclingOptionsAsString = '$recyclingOptionsAsString\n   Food waste';
+    }
+    return recyclingOptionsAsString;
+  }
+
+  //Method to set the animation based on the rating recieved
+  static Widget? getAnimation(String rating) {
+    Widget? animation;
+    switch (rating) {
+      case "Bronze":
+        animation = Lottie.asset('assets/bronzeAnimation.json',
+            width: 150, height: 150, fit: BoxFit.fill);
+        break;
+      case "Silver":
+        animation = Lottie.asset('assets/silverAnimation.json',
+            width: 150, height: 150, fit: BoxFit.fill);
+        break;
+      case "Gold":
+        animation = Lottie.asset('assets/goldAnimation.json',
+            width: 150, height: 150, fit: BoxFit.fill);
+        break;
+      case "Platinum":
+        animation = Lottie.asset('assets/platinumAnimation.json',
+            width: 250, height: 150, fit: BoxFit.fill);
+        break;
+      case "Diamond":
+        animation = Lottie.asset('assets/diamondAnimation.json',
+            width: 150, height: 150, fit: BoxFit.fill);
+        break;
+      default:
+        animation = null;
+    }
+
+    return animation;
+  }
+
+  //Method to set the colour of the rating based on the rating recieved
+  static Color? getColourFromRating(String rating) {
+    Color? colour;
+    switch (rating) {
+      case "Bronze":
+        colour = const Color.fromRGBO(194, 121, 4, 0.996);
+        break;
+      case "Silver":
+        colour = const Color.fromRGBO(76, 77, 77, 0.914);
+        break;
+      case "Gold":
+        colour = const Color.fromRGBO(225, 183, 0, 1);
+        break;
+      case "Platinum":
+        colour = const Color.fromRGBO(13, 205, 176, 0.601);
+        break;
+      case "Diamond":
+        colour = const Color.fromRGBO(4, 17, 158, 0.478);
+        break;
+      default:
+        colour = null;
+    }
+
+    return colour;
+  }
+
   //Method to return a calculation in CO2e kg based on the compeleted results
   static double calculateCarbonEmissionsValue(Results result) {
     double carbonEmissionsResultInKg = 0.0;
@@ -367,10 +450,10 @@ class QuestionsCalculations {
 
     //Value for food packaging
     switch (result.packagingUse) {
-      case 'Mostly Prepackaged convienience food items':
+      case 'Mostly Prepackaged food':
         carbonEmissionsResultInKg = carbonEmissionsResultInKg + 14.22;
         break;
-      case 'Balance of prepackaged and fresh food items':
+      case 'Prepackaged and fresh food':
         carbonEmissionsResultInKg = carbonEmissionsResultInKg + 7.11;
         break;
       case 'Only fresh food items':
@@ -462,16 +545,16 @@ class QuestionsCalculations {
     }
     if (result.typesOfRecycling.contains('Paper')) {
       carbonEmissionsResultInKg = carbonEmissionsResultInKg - 1.06;
-    } 
+    }
     if (result.typesOfRecycling.contains('Aluminum')) {
       carbonEmissionsResultInKg = carbonEmissionsResultInKg - 1.06;
-    } 
+    }
     if (result.typesOfRecycling.contains('Steel')) {
       carbonEmissionsResultInKg = carbonEmissionsResultInKg - 1.06;
-    } 
+    }
     if (result.typesOfRecycling.contains('Food waste')) {
       carbonEmissionsResultInKg = carbonEmissionsResultInKg - 1.06;
-    } 
+    }
 
     //Personal vehicle milage
     double personalVehicleMileage = 0.07519 * result.personalVehicleMiles;
@@ -479,7 +562,7 @@ class QuestionsCalculations {
         carbonEmissionsResultInKg + personalVehicleMileage;
 
     //Public transport milage
-    double publicTransportMileage = 0.034350 * result.publicTransportMiles;
+    double publicTransportMileage = 0.04350 * result.publicTransportMiles;
     carbonEmissionsResultInKg =
         carbonEmissionsResultInKg + publicTransportMileage;
 

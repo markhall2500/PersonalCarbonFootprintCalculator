@@ -4,13 +4,14 @@ import 'package:personal_carbon_footprint_app/data/results.dart';
 import 'package:personal_carbon_footprint_app/data/results_input.dart';
 import 'package:personal_carbon_footprint_app/data/sp_helper.dart';
 import 'package:personal_carbon_footprint_app/helpers/questions_calculations.dart';
+import 'package:personal_carbon_footprint_app/helpers/questions_previous_results.dart';
 import 'package:personal_carbon_footprint_app/helpers/questions_validators.dart';
 import 'package:personal_carbon_footprint_app/shared/globals.dart';
 import 'package:personal_carbon_footprint_app/shared/menu_drawer.dart';
 import '../shared/menu_bottom.dart';
 
-//Stateful class which contains the questions for the calculating the
-//users personal carbon footprint
+//This class generates the screen which contains the questions for the
+//calculating the users personal carbon footprint
 class CarbonFootprintQuestionsScreen extends StatefulWidget {
   const CarbonFootprintQuestionsScreen({super.key});
 
@@ -23,20 +24,28 @@ class _CarbonFootprintQuestionsScreenState
     extends State<CarbonFootprintQuestionsScreen> {
   //This key will be used to identify the state of the form.
   final _formKey = GlobalKey<FormState>();
-  final SPHelper helper = SPHelper();
+  SPHelper helper = SPHelper();
 
-  //Text editing conrolling variables for the text field questions
-  final TextEditingController txtNumberOfPeopleInHome = TextEditingController();
-  final TextEditingController txtNumberOfWheelieBinsFilled =
-      TextEditingController();
-  final TextEditingController txtPersonalVehicleUsage = TextEditingController();
-  final TextEditingController txtPublicTransportUsage = TextEditingController();
+  //Text editing controlling variables for the text field questions
+  TextEditingController txtNumberOfPeopleInHome = TextEditingController();
+  TextEditingController txtNumberOfWheelieBinsFilled = TextEditingController();
+  TextEditingController txtPersonalVehicleUsage = TextEditingController();
+  TextEditingController txtPublicTransportUsage = TextEditingController();
 
   //variables for the fontsize and results variables
-  final double fontSize = 14;
+  final double fontSize = 16;
   String result = '';
-  String rating = '';
+  RichText rating = RichText(
+    text: const TextSpan(
+      text: '',
+      children: <TextSpan>[
+        TextSpan(text: ''),
+      ],
+    ),
+  );
+
   String improvementSuggestionsFormatted = '';
+  Widget? animation;
 
   //Variables for help text on questions
   String numberOfPeopleInHomeMessage = '';
@@ -59,8 +68,8 @@ class _CarbonFootprintQuestionsScreenState
 
   //Variables for food packaging choices
   List<String> foodPackagingDropDown = [
-    'Mostly Prepackaged convienience food items',
-    'Balance of prepackaged and fresh food items',
+    'Mostly Prepackaged food',
+    'Prepackaged and fresh food',
     'Only fresh food items'
   ];
   String? selectedFoodPackaging;
@@ -70,7 +79,7 @@ class _CarbonFootprintQuestionsScreenState
     'More than 9 times per week',
     '4-9 times per week',
     '1-3 times per week',
-    'I do not own a washing machine'
+    'No washing machine'
   ];
   String? selectedWashingMachineUsage;
 
@@ -79,7 +88,7 @@ class _CarbonFootprintQuestionsScreenState
     'More than 9 times per week',
     '4-9 times per week',
     '1-3 times per week',
-    'I do not own a dishwasher'
+    'No dishwasher'
   ];
   String? selectedDishwasherUsage;
 
@@ -89,7 +98,7 @@ class _CarbonFootprintQuestionsScreenState
     '5-7 new items',
     '3-5 new items',
     'Less than 3 items',
-    'Almost nothing or second hand only'
+    'Almost nothing or second hand'
   ];
   String? selectedHouseholdPurchases;
 
@@ -112,16 +121,163 @@ class _CarbonFootprintQuestionsScreenState
     'Food waste': false
   };
 
+  var isPreviousRecyclingGlassResultSet = false;
+  var isPreviousRecyclingPlasticResultSet = false;
+  var isPreviousRecyclingPaperResultSet = false;
+  var isPreviousRecyclingAluminumResultSet = false;
+  var isPreviousRecyclingSteelResultSet = false;
+  var isPreviousRecyclingFoodWasteResultSet = false;
+
   @override
   Widget build(BuildContext context) {
-    numberOfPeopleInHomeMessage =
-        'Please enter the number of people in your house';
+    numberOfPeopleInHomeMessage = 'Number of people in your house';
     numberOfWheelieBinsFilledMessage =
-        'How many non-recycle wheelie bins do you fill each week?';
-    personalVehicleUsageMessage =
-        'How many miles per year in your personal vehicle?';
-    publicTransportUsageMessage =
-        'How many miles per year on public transport?';
+        'Black wheelie bins filled weekly';
+    personalVehicleUsageMessage = 'Miles per year in personal vehicle';
+    publicTransportUsageMessage = 'Miles per year on public transport';
+
+    //Check for previous results to populate the fields
+    var latestNumberOfPeopleInHomeResults =
+        QuestionsPreviousResults.numberOfPeopleInHousePreviousResult(
+            helper.getResultsForLoggedInUser());
+    if (latestNumberOfPeopleInHomeResults != null &&
+        txtNumberOfPeopleInHome.text.isEmpty) {
+      txtNumberOfPeopleInHome =
+          TextEditingController(text: latestNumberOfPeopleInHomeResults);
+    }
+
+    var latestHouseSizeResults =
+        QuestionsPreviousResults.houseSizePreviousResult(
+            helper.getResultsForLoggedInUser());
+    if (latestHouseSizeResults != null && selectedSizeOfHouse == null) {
+      selectedSizeOfHouse = latestHouseSizeResults;
+    }
+
+    var latestFoodHabitsResults =
+        QuestionsPreviousResults.foodHabitsPreviousResult(
+            helper.getResultsForLoggedInUser());
+    if (latestFoodHabitsResults != null && selectedFoodHabits == null) {
+      selectedFoodHabits = latestFoodHabitsResults;
+    }
+
+    var latestFoodPackagingUseResults =
+        QuestionsPreviousResults.foodPackagingPreviousResult(
+            helper.getResultsForLoggedInUser());
+    if (latestFoodPackagingUseResults != null &&
+        selectedFoodPackaging == null) {
+      selectedFoodPackaging = latestFoodPackagingUseResults;
+    }
+
+    var latestWashingMachineResults =
+        QuestionsPreviousResults.washingMachinePreviousResult(
+            helper.getResultsForLoggedInUser());
+    if (latestWashingMachineResults != null &&
+        selectedWashingMachineUsage == null) {
+      selectedWashingMachineUsage = latestWashingMachineResults;
+    }
+
+    var latestDishwasherResults =
+        QuestionsPreviousResults.dishwasherPreviousResult(
+            helper.getResultsForLoggedInUser());
+    if (latestDishwasherResults != null && selectedDishwasherUsage == null) {
+      selectedDishwasherUsage = latestDishwasherResults;
+    }
+
+    var latestNewHouseholdPurchasesResults =
+        QuestionsPreviousResults.newHouseholdItemsPreviousResult(
+            helper.getResultsForLoggedInUser());
+    if (latestNewHouseholdPurchasesResults != null &&
+        selectedHouseholdPurchases == null) {
+      selectedHouseholdPurchases = latestNewHouseholdPurchasesResults;
+    }
+
+    var latestWheelieBinResults =
+        QuestionsPreviousResults.wheelieBinsPreviousResult(
+            helper.getResultsForLoggedInUser());
+    if (latestWheelieBinResults != null &&
+        txtNumberOfWheelieBinsFilled.text.isEmpty) {
+      txtNumberOfWheelieBinsFilled =
+          TextEditingController(text: latestWheelieBinResults);
+    }
+
+    if (!isPreviousRecyclingGlassResultSet) {
+      var latestTypesOfRecyclingPreviousResult =
+          QuestionsPreviousResults.typesOfRecyclingPreviousResult(
+              helper.getResultsForLoggedInUser());
+      recyclingOptionsCheckboxes['Glass'] =
+          latestTypesOfRecyclingPreviousResult[0];
+      isPreviousRecyclingGlassResultSet = true;
+    }
+
+    if (!isPreviousRecyclingPlasticResultSet) {
+      var latestTypesOfRecyclingPreviousResult =
+          QuestionsPreviousResults.typesOfRecyclingPreviousResult(
+              helper.getResultsForLoggedInUser());
+      recyclingOptionsCheckboxes['Plastic'] =
+          latestTypesOfRecyclingPreviousResult[1];
+      isPreviousRecyclingPlasticResultSet = true;
+    }
+
+    if (!isPreviousRecyclingPaperResultSet) {
+      var latestTypesOfRecyclingPreviousResult =
+          QuestionsPreviousResults.typesOfRecyclingPreviousResult(
+              helper.getResultsForLoggedInUser());
+      recyclingOptionsCheckboxes['Paper'] =
+          latestTypesOfRecyclingPreviousResult[2];
+      isPreviousRecyclingPaperResultSet = true;
+    }
+
+    if (!isPreviousRecyclingAluminumResultSet) {
+      var latestTypesOfRecyclingPreviousResult =
+          QuestionsPreviousResults.typesOfRecyclingPreviousResult(
+              helper.getResultsForLoggedInUser());
+      recyclingOptionsCheckboxes['Aluminum'] =
+          latestTypesOfRecyclingPreviousResult[3];
+      isPreviousRecyclingAluminumResultSet = true;
+    }
+
+    if (!isPreviousRecyclingSteelResultSet) {
+      var latestTypesOfRecyclingPreviousResult =
+          QuestionsPreviousResults.typesOfRecyclingPreviousResult(
+              helper.getResultsForLoggedInUser());
+      recyclingOptionsCheckboxes['Steel'] =
+          latestTypesOfRecyclingPreviousResult[4];
+      isPreviousRecyclingSteelResultSet = true;
+    }
+
+    if (!isPreviousRecyclingFoodWasteResultSet) {
+      var latestTypesOfRecyclingPreviousResult =
+          QuestionsPreviousResults.typesOfRecyclingPreviousResult(
+              helper.getResultsForLoggedInUser());
+      recyclingOptionsCheckboxes['Food waste'] =
+          latestTypesOfRecyclingPreviousResult[5];
+      isPreviousRecyclingFoodWasteResultSet = true;
+    }
+
+    var latestPersonalVehicleMilesResults =
+        QuestionsPreviousResults.personalVehicleMilesPreviousResult(
+            helper.getResultsForLoggedInUser());
+    if (latestPersonalVehicleMilesResults != null &&
+        txtPersonalVehicleUsage.text.isEmpty) {
+      txtPersonalVehicleUsage =
+          TextEditingController(text: latestPersonalVehicleMilesResults);
+    }
+
+    var latestPublicTransportMilesResults =
+        QuestionsPreviousResults.publicTransportMilesPreviousResult(
+            helper.getResultsForLoggedInUser());
+    if (latestPublicTransportMilesResults != null &&
+        txtPublicTransportUsage.text.isEmpty) {
+      txtPublicTransportUsage =
+          TextEditingController(text: latestPublicTransportMilesResults);
+    }
+
+    var latestflightsUsageResults =
+        QuestionsPreviousResults.flightsMilesPreviousResult(
+            helper.getResultsForLoggedInUser());
+    if (latestflightsUsageResults != null && selectedFlightsUsage == null) {
+      selectedFlightsUsage = latestflightsUsageResults;
+    }
 
     //Scaffold which will build the questions page in the UI
     return Scaffold(
@@ -137,359 +293,552 @@ class _CarbonFootprintQuestionsScreenState
           child: SingleChildScrollView(
             child: Column(children: [
               //Title for the page
-              const Padding(
-                  padding: EdgeInsets.all(32.0),
-                  child: Text(
-                    'Carbon Footprint Questions',
-                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-                  )),
-              //Description for the page
               Padding(
                   padding: const EdgeInsets.all(32.0),
                   child: Text(
-                    'Complete the questions below to calculate your personal carbon footprint. When complete, you wil recieve a rating of \nBronze / Silver / Gold / Platinum / Diamond',
+                    'Carbon Footprint Questions',
                     style: TextStyle(
-                        fontSize: fontSize, fontWeight: FontWeight.bold),
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold,
+                        shadows: [globalShadowText()]),
                   )),
+              //Description for the page including colour for rating text
+              Center(
+                child: Padding(
+                    padding: const EdgeInsets.only(
+                        top: 10.0, left: 32.0, right: 32.0, bottom: 20.0),
+                    child: Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                        color: Colors.white38,
+                      ),
+                      child: RichText(
+                          textAlign: TextAlign.center,
+                          text: TextSpan(children: <TextSpan>[
+                            TextSpan(
+                                text:
+                                    'Complete the questions below to calculate your personal carbon footprint. When complete, you wil recieve a rating of ',
+                                style:
+                                    TextStyle(color : Colors.black, shadows: [globalShadowText()])),
+                            TextSpan(
+                                text: 'Bronze',
+                                style: TextStyle(
+                                    color: const Color.fromRGBO(
+                                        194, 121, 4, 0.996),
+                                    shadows: [globalShadowText()])),
+                            const TextSpan(text: ' / '),
+                            TextSpan(
+                                text: 'Silver',
+                                style: TextStyle(
+                                    color:
+                                        const Color.fromRGBO(76, 77, 77, 0.914),
+                                    shadows: [globalShadowText()])),
+                            const TextSpan(
+                                text: ' / ', 
+                                style: TextStyle(color : Colors.black)),
+                            TextSpan(
+                                text: 'Gold',
+                                style: TextStyle(
+                                    color: const Color.fromRGBO(225, 183, 0, 1),
+                                    shadows: [globalShadowText()])),
+                            const TextSpan(
+                              text: ' / ',
+                              style: TextStyle(color : Colors.black)),
+                            TextSpan(
+                                text: 'Platinum',
+                                style: TextStyle(
+                                    color: const Color.fromRGBO(
+                                        13, 205, 176, 0.601),
+                                    shadows: [globalShadowText()])),
+                            const TextSpan(
+                              text: ' / ',
+                              style: TextStyle(color : Colors.black)),
+                            TextSpan(
+                                text: 'Diamond',
+                                style: TextStyle(
+                                    color:
+                                        const Color.fromRGBO(4, 17, 158, 0.478),
+                                    shadows: [globalShadowText()])),
+                          ])),
+                    )),
+              ),
               //Question for number of people in the home
               Padding(
-                padding: const EdgeInsets.all(32.0),
-                child: TextFormField(
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: fontSize,
-                    ),
-                    controller: txtNumberOfPeopleInHome,
-                    decoration:
-                        InputDecoration(hintText: numberOfPeopleInHomeMessage),
-                    validator: (value) {
-                      return QuestionsValidators.numberOfPeopleInHouseValidator(
-                          value);
-                    },
-                    keyboardType: TextInputType.number),
+                padding:
+                    const EdgeInsets.only(top: 12.0, left: 32.0, right: 32.0),
+                child: Container(
+                  padding: const EdgeInsets.all(14),
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                    color: Colors.white38,
+                  ),
+                  child: TextFormField(
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: fontSize,
+                          shadows: [globalShadowText()]),
+                      controller: txtNumberOfPeopleInHome,
+                      decoration: InputDecoration(
+                          hintText: numberOfPeopleInHomeMessage),
+                      validator: (value) {
+                        return QuestionsValidators
+                            .numberOfPeopleInHouseValidator(value);
+                      },
+                      keyboardType: TextInputType.number),
+                ),
               ),
               //Questions for the house size
               Padding(
-                padding: const EdgeInsets.all(32.0),
-                child: DropdownButtonFormField(
-                  validator: (value) {
-                    return QuestionsValidators.houseSizeValidator(value);
-                  },
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: fontSize),
-                  hint: const Text('Please select your house size'),
-                  value: selectedSizeOfHouse,
-                  onChanged: (newValue) {
-                    setState(() {
-                      selectedSizeOfHouse = newValue;
-                    });
-                  },
-                  items: houseSizesDropDown.map((size) {
-                    return DropdownMenuItem(
-                      value: size,
-                      child: Text(size),
-                    );
-                  }).toList(),
+                padding: const EdgeInsets.only(left: 32.0, right: 32.0),
+                child: Container(
+                  padding: const EdgeInsets.all(14),
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                    color: Colors.white38,
+                  ),
+                  child: DropdownButtonFormField(
+                    validator: (value) {
+                      return QuestionsValidators.houseSizeValidator(value);
+                    },
+                    style: TextStyle(
+                        color : Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: fontSize,
+                        shadows: [globalShadowText()]),
+                    hint: const Text('House size'),
+                    value: latestHouseSizeResults,
+                    onChanged: (newValue) {
+                      setState(() {
+                        selectedSizeOfHouse = newValue;
+                      });
+                    },
+                    items: houseSizesDropDown.map((size) {
+                      return DropdownMenuItem(
+                        value: size,
+                        child: Text(size),
+                      );
+                    }).toList(),
+                  ),
                 ),
               ),
               //Question for food habits
               Padding(
-                padding: const EdgeInsets.all(32.0),
-                child: DropdownButtonFormField(
-                  validator: (value) {
-                    return QuestionsValidators.foodHabitsValidator(value);
-                  },
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: fontSize),
-                  hint: const Text('Please select your food habits'),
-                  value: selectedFoodHabits,
-                  onChanged: (newValue) {
-                    setState(() {
-                      selectedFoodHabits = newValue;
-                    });
-                  },
-                  items: foodHabitsDropDown.map((habits) {
-                    return DropdownMenuItem(
-                      value: habits,
-                      child: Text(habits),
-                    );
-                  }).toList(),
+                padding: const EdgeInsets.only(left: 32.0, right: 32.0),
+                child: Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                    color: Colors.white38,
+                  ),
+                  child: DropdownButtonFormField(
+                    validator: (value) {
+                      return QuestionsValidators.foodHabitsValidator(value);
+                    },
+                    style: TextStyle(
+                        color : Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: fontSize,
+                        shadows: [globalShadowText()]),
+                    hint: const Text('Food habits'),
+                    value: latestFoodHabitsResults,
+                    onChanged: (newValue) {
+                      setState(() {
+                        selectedFoodHabits = newValue;
+                      });
+                    },
+                    items: foodHabitsDropDown.map((habits) {
+                      return DropdownMenuItem(
+                        value: habits,
+                        child: Text(habits),
+                      );
+                    }).toList(),
+                  ),
                 ),
               ),
               //Question for food packaging usage
               Padding(
-                padding: const EdgeInsets.all(32.0),
-                child: DropdownButtonFormField(
-                  validator: (value) {
-                    return QuestionsValidators.foodPackagingUseValidator(value);
-                  },
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: fontSize),
-                  hint: const Text('Please select your food packaging use'),
-                  value: selectedFoodPackaging,
-                  onChanged: (newValue) {
-                    setState(() {
-                      selectedFoodPackaging = newValue;
-                    });
-                  },
-                  items: foodPackagingDropDown.map((packaging) {
-                    return DropdownMenuItem(
-                      value: packaging,
-                      child: Text(packaging),
-                    );
-                  }).toList(),
+                padding: const EdgeInsets.only(left: 32.0, right: 32.0),
+                child: Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                    color: Colors.white38,
+                  ),
+                  child: DropdownButtonFormField(
+                    validator: (value) {
+                      return QuestionsValidators.foodPackagingUseValidator(
+                          value);
+                    },
+                    style: TextStyle(
+                        color : Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: fontSize,
+                        shadows: [globalShadowText()]),
+                    hint: const Text('Food packaging usage'),
+                    value: latestFoodPackagingUseResults,
+                    onChanged: (newValue) {
+                      setState(() {
+                        selectedFoodPackaging = newValue;
+                      });
+                    },
+                    items: foodPackagingDropDown.map((packaging) {
+                      return DropdownMenuItem(
+                        value: packaging,
+                        child: Text(packaging),
+                      );
+                    }).toList(),
+                  ),
                 ),
               ),
               //Question for washing machine usage
               Padding(
-                padding: const EdgeInsets.all(32.0),
-                child: DropdownButtonFormField(
-                  validator: (value) {
-                    return QuestionsValidators.washingMachineUsageValidator(
-                        value);
-                  },
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: fontSize),
-                  hint: const Text('How often do you use your washing machine?'),
-                  value: selectedWashingMachineUsage,
-                  onChanged: (newValue) {
-                    setState(() {
-                      selectedWashingMachineUsage = newValue;
-                    });
-                  },
-                  items: washingMachineUsageDropDown.map((washingMachine) {
-                    return DropdownMenuItem(
-                      value: washingMachine,
-                      child: Text(washingMachine),
-                    );
-                  }).toList(),
+                padding: const EdgeInsets.only(left: 32.0, right: 32.0),
+                child: Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                    color: Colors.white38,
+                  ),
+                  child: DropdownButtonFormField(
+                    validator: (value) {
+                      return QuestionsValidators.washingMachineUsageValidator(
+                          value);
+                    },
+                    style: TextStyle(
+                        color : Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: fontSize,
+                        shadows: [globalShadowText()]),
+                    hint: const Text('Washing machine usage'),
+                    value: latestWashingMachineResults,
+                    onChanged: (newValue) {
+                      setState(() {
+                        selectedWashingMachineUsage = newValue;
+                      });
+                    },
+                    items: washingMachineUsageDropDown.map((washingMachine) {
+                      return DropdownMenuItem(
+                        value: washingMachine,
+                        child: Text(washingMachine),
+                      );
+                    }).toList(),
+                  ),
                 ),
               ),
               //Questions for dishwasher usage
               Padding(
-                padding: const EdgeInsets.all(32.0),
-                child: DropdownButtonFormField(
-                  validator: (value) {
-                    return QuestionsValidators.dishwasherUsageValidator(value);
-                  },
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: fontSize),
-                  hint: const Text('How often do you use your dishwasher?'),
-                  value: selectedDishwasherUsage,
-                  onChanged: (newValue) {
-                    setState(() {
-                      selectedDishwasherUsage = newValue;
-                    });
-                  },
-                  items: dishwasherUsageDropDown.map((dishwasher) {
-                    return DropdownMenuItem(
-                      value: dishwasher,
-                      child: Text(dishwasher),
-                    );
-                  }).toList(),
+                padding: const EdgeInsets.only(left: 32.0, right: 32.0),
+                child: Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                    color: Colors.white38,
+                  ),
+                  child: DropdownButtonFormField(
+                    validator: (value) {
+                      return QuestionsValidators.dishwasherUsageValidator(
+                          value);
+                    },
+                    style: TextStyle(
+                        color : Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: fontSize,
+                        shadows: [globalShadowText()]),
+                    hint: const Text('Dishwasher usage'),
+                    value: latestDishwasherResults,
+                    onChanged: (newValue) {
+                      setState(() {
+                        selectedDishwasherUsage = newValue;
+                      });
+                    },
+                    items: dishwasherUsageDropDown.map((dishwasher) {
+                      return DropdownMenuItem(
+                        value: dishwasher,
+                        child: Text(dishwasher),
+                      );
+                    }).toList(),
+                  ),
                 ),
               ),
               //Question for new household items
               Padding(
-                padding: const EdgeInsets.all(32.0),
-                child: DropdownButtonFormField(
-                  validator: (value) {
-                    return QuestionsValidators.newHouseholdItemsValidator(
-                        value);
-                  },
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: fontSize),
-                  hint:
-                      const Text('How many new household items do you buy per year?'),
-                  value: selectedHouseholdPurchases,
-                  onChanged: (newValue) {
-                    setState(() {
-                      selectedHouseholdPurchases = newValue;
-                    });
-                  },
-                  items: householdPurchasesDropDown.map((householdPurchases) {
-                    return DropdownMenuItem(
-                      value: householdPurchases,
-                      child: Text(householdPurchases),
-                    );
-                  }).toList(),
+                padding: const EdgeInsets.only(left: 32.0, right: 32.0),
+                child: Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                    color: Colors.white38,
+                  ),
+                  child: DropdownButtonFormField(
+                    validator: (value) {
+                      return QuestionsValidators.newHouseholdItemsValidator(
+                          value);
+                    },
+                    style: TextStyle(
+                        color : Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: fontSize,
+                        shadows: [globalShadowText()]),
+                    hint: const Text('New household items per year'),
+                    value: latestNewHouseholdPurchasesResults,
+                    onChanged: (newValue) {
+                      setState(() {
+                        selectedHouseholdPurchases = newValue;
+                      });
+                    },
+                    items: householdPurchasesDropDown.map((householdPurchases) {
+                      return DropdownMenuItem(
+                        value: householdPurchases,
+                        child: Text(householdPurchases),
+                      );
+                    }).toList(),
+                  ),
                 ),
               ),
               //Question for number of wheelie bins filles
               Padding(
-                padding: const EdgeInsets.all(32.0),
-                child: TextFormField(
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: fontSize),
-                    controller: txtNumberOfWheelieBinsFilled,
-                    decoration: InputDecoration(
-                        hintText: numberOfWheelieBinsFilledMessage),
-                    validator: (value) {
-                      return QuestionsValidators
-                          .numberOfWheelieBinsFilledValidator(value);
-                    },
-                    keyboardType: TextInputType.number),
+                padding: const EdgeInsets.only(left: 32.0, right: 32.0),
+                child: Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                    color: Colors.white38,
+                  ),
+                  child: TextFormField(
+                      style: TextStyle(
+                          color : Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: fontSize,
+                          shadows: [globalShadowText()]),
+                      controller: txtNumberOfWheelieBinsFilled,
+                      decoration: InputDecoration(
+                          hintText: numberOfWheelieBinsFilledMessage),
+                      validator: (value) {
+                        return QuestionsValidators
+                            .numberOfWheelieBinsFilledValidator(value);
+                      },
+                      keyboardType: TextInputType.number),
+                ),
               ),
               //Header and question for types of waste recycled
               Padding(
-                  padding: const EdgeInsets.all(32.0),
-                  child: Text(
-                    'Which types of waste do you recycle?',
-                    style: TextStyle(
-                        fontSize: fontSize, fontWeight: FontWeight.bold),
+                  padding:
+                      const EdgeInsets.only(top: 12.0, left: 32.0, right: 32.0),
+                  child: Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                      color: Colors.white38,
+                    ),
+                    child: Text(
+                      'Which types of waste do you recycle',
+                      style: TextStyle(
+                          color : Colors.black,
+                          fontSize: fontSize,
+                          fontWeight: FontWeight.bold,
+                          shadows: [globalShadowText()]),
+                    ),
                   )),
               Padding(
-                padding: const EdgeInsets.all(32.0),
-                child: SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    child: Column(
-                      children: [
-                        CheckboxListTile(
-                            title: Text(
-                              'Glass',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: fontSize),
-                            ),
-                            value: recyclingOptionsCheckboxes['Glass'],
-                            onChanged: (bool? value) {
-                              setState(() {
-                                recyclingOptionsCheckboxes['Glass'] = value;
-                              });
-                            }),
-                        CheckboxListTile(
-                            title: Text(
-                              'Plastic',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: fontSize),
-                            ),
-                            value: recyclingOptionsCheckboxes['Plastic'],
-                            onChanged: (bool? value) {
-                              setState(() {
-                                recyclingOptionsCheckboxes['Plastic'] = value;
-                              });
-                            }),
-                        CheckboxListTile(
-                            title: Text(
-                              'Paper',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: fontSize),
-                            ),
-                            value: recyclingOptionsCheckboxes['Paper'],
-                            onChanged: (bool? value) {
-                              setState(() {
-                                recyclingOptionsCheckboxes['Paper'] = value;
-                              });
-                            }),
-                        CheckboxListTile(
-                            title: Text(
-                              'Aluminum',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: fontSize),
-                            ),
-                            value: recyclingOptionsCheckboxes['Aluminum'],
-                            onChanged: (bool? value) {
-                              setState(() {
-                                recyclingOptionsCheckboxes['Aluminum'] = value;
-                              });
-                            }),
-                        CheckboxListTile(
-                            title: Text(
-                              'Steel',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: fontSize),
-                            ),
-                            value: recyclingOptionsCheckboxes['Steel'],
-                            onChanged: (bool? value) {
-                              setState(() {
-                                recyclingOptionsCheckboxes['Steel'] = value;
-                              });
-                            }),
-                        CheckboxListTile(
-                            title: Text(
-                              'Food waste',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: fontSize),
-                            ),
-                            value: recyclingOptionsCheckboxes['Food waste'],
-                            onChanged: (bool? value) {
-                              setState(() {
-                                recyclingOptionsCheckboxes['Food waste'] =
-                                    value;
-                              });
-                            })
-                      ],
-                    )),
+                padding: const EdgeInsets.only(left: 32.0, right: 32.0),
+                child: Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                    color: Colors.white38,
+                  ),
+                  child: SingleChildScrollView(
+                      scrollDirection: Axis.vertical,
+                      child: Column(
+                        children: [
+                          CheckboxListTile(
+                              title: Text(
+                                'Glass',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: fontSize,
+                                    shadows: [globalShadowText()]),
+                              ),
+                              value: recyclingOptionsCheckboxes['Glass'],
+                              onChanged: (bool? value) {
+                                setState(() {
+                                  recyclingOptionsCheckboxes['Glass'] = value;
+                                });
+                              }),
+                          CheckboxListTile(
+                              title: Text(
+                                'Plastic',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: fontSize,
+                                    shadows: [globalShadowText()]),
+                              ),
+                              value: recyclingOptionsCheckboxes['Plastic'],
+                              onChanged: (bool? value) {
+                                setState(() {
+                                  recyclingOptionsCheckboxes['Plastic'] = value;
+                                });
+                              }),
+                          CheckboxListTile(
+                              title: Text(
+                                'Paper',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: fontSize,
+                                    shadows: [globalShadowText()]),
+                              ),
+                              value: recyclingOptionsCheckboxes['Paper'],
+                              onChanged: (bool? value) {
+                                setState(() {
+                                  recyclingOptionsCheckboxes['Paper'] = value;
+                                });
+                              }),
+                          CheckboxListTile(
+                              title: Text(
+                                'Aluminum',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: fontSize,
+                                    shadows: [globalShadowText()]),
+                              ),
+                              value: recyclingOptionsCheckboxes['Aluminum'],
+                              onChanged: (bool? value) {
+                                setState(() {
+                                  recyclingOptionsCheckboxes['Aluminum'] =
+                                      value;
+                                });
+                              }),
+                          CheckboxListTile(
+                              title: Text(
+                                'Steel',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: fontSize,
+                                    shadows: [globalShadowText()]),
+                              ),
+                              value: recyclingOptionsCheckboxes['Steel'],
+                              onChanged: (bool? value) {
+                                setState(() {
+                                  recyclingOptionsCheckboxes['Steel'] = value;
+                                });
+                              }),
+                          CheckboxListTile(
+                              title: Text(
+                                'Food waste',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: fontSize,
+                                    shadows: [globalShadowText()]),
+                              ),
+                              value: recyclingOptionsCheckboxes['Food waste'],
+                              onChanged: (bool? value) {
+                                setState(() {
+                                  recyclingOptionsCheckboxes['Food waste'] =
+                                      value;
+                                });
+                              })
+                        ],
+                      )),
+                ),
               ),
               //Question for personal vehicle usage
               Padding(
-                padding: const EdgeInsets.all(32.0),
-                child: TextFormField(
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: fontSize),
-                    controller: txtPersonalVehicleUsage,
-                    decoration:
-                        InputDecoration(hintText: personalVehicleUsageMessage),
-                    validator: (value) {
-                      return QuestionsValidators.personalVehicleMilageValidator(
-                          value);
-                    },
-                    keyboardType: TextInputType.number),
+                padding:
+                    const EdgeInsets.only(top: 12.0, left: 32.0, right: 32.0),
+                child: Container(
+                  padding: const EdgeInsets.all(14),
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                    color: Colors.white38,
+                  ),
+                  child: TextFormField(
+                      style: TextStyle(
+                          color : Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: fontSize,
+                          shadows: [globalShadowText()]),
+                      controller: txtPersonalVehicleUsage,
+                      decoration: InputDecoration(
+                          hintText: personalVehicleUsageMessage),
+                      validator: (value) {
+                        return QuestionsValidators
+                            .personalVehicleMilageValidator(value);
+                      },
+                      keyboardType: TextInputType.number),
+                ),
               ),
               //Question for public transport usage
               Padding(
-                padding: const EdgeInsets.all(32.0),
-                child: TextFormField(
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: fontSize),
-                    controller: txtPublicTransportUsage,
-                    decoration:
-                        InputDecoration(hintText: publicTransportUsageMessage),
-                    validator: (value) {
-                      return QuestionsValidators.publicTransportMilageValidator(
-                          value);
-                    },
-                    keyboardType: TextInputType.number),
+                padding: const EdgeInsets.only(left: 32.0, right: 32.0),
+                child: Container(
+                  padding: const EdgeInsets.all(14),
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                    color: Colors.white38,
+                  ),
+                  child: TextFormField(
+                      style: TextStyle(
+                          color : Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: fontSize,
+                          shadows: [globalShadowText()]),
+                      controller: txtPublicTransportUsage,
+                      decoration: InputDecoration(
+                          hintText: publicTransportUsageMessage),
+                      validator: (value) {
+                        return QuestionsValidators
+                            .publicTransportMilageValidator(value);
+                      },
+                      keyboardType: TextInputType.number),
+                ),
               ),
               //Question for flights per year
               Padding(
-                padding: const EdgeInsets.all(32.0),
-                child: DropdownButtonFormField(
-                  validator: (value) {
-                    return QuestionsValidators.flightsPerYearValidator(value);
-                  },
-                  style: TextStyle(
-                      fontSize: fontSize, fontWeight: FontWeight.bold),
-                  hint: const Text('Where have you taken flights this year?'),
-                  value: selectedFlightsUsage,
-                  onChanged: (newValue) {
-                    setState(() {
-                      selectedFlightsUsage = newValue;
-                    });
-                  },
-                  items: flightsUsageDropDown.map((flightsUsage) {
-                    return DropdownMenuItem(
-                      value: flightsUsage,
-                      child: Text(flightsUsage),
-                    );
-                  }).toList(),
+                padding: const EdgeInsets.only(left: 32.0, right: 32.0),
+                child: Container(
+                  padding: const EdgeInsets.all(14),
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                    color: Colors.white38,
+                  ),
+                  child: DropdownButtonFormField(
+                    validator: (value) {
+                      return QuestionsValidators.flightsPerYearValidator(value);
+                    },
+                    style: TextStyle(
+                        fontSize: fontSize,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        shadows: [globalShadowText()]),
+                    hint: const Text('Flights this year'),
+                    value: QuestionsPreviousResults.flightsMilesPreviousResult(
+                        helper.getResultsForLoggedInUser()),
+                    onChanged: (newValue) {
+                      setState(() {
+                        selectedFlightsUsage = newValue;
+                      });
+                    },
+                    items: flightsUsageDropDown.map((flightsUsage) {
+                      return DropdownMenuItem(
+                        value: flightsUsage,
+                        child: Text(flightsUsage),
+                      );
+                    }).toList(),
+                  ),
                 ),
               ),
               //Form submission
               Padding(
-                padding: const EdgeInsets.all(20.0),
+                padding:
+                    const EdgeInsets.only(top: 42.0, left: 32.0, right: 32.0),
                 child: ElevatedButton(
                     onPressed: () {
                       // Validate returns true if the form is valid, or false otherwise.
                       if (_formKey.currentState!.validate()) {
                         Results result = calculateCarbonFootprint();
                         DateTime now = DateTime.now();
-                        String timestamp = DateFormat("dd/MM/yyyy   hh:mm:ss")
+                        String timestamp = DateFormat("dd/MM/yyyy  HH:mm:ss")
                             .format(now)
                             .toString();
                         int id = helper.getCounter() + 1;
@@ -502,30 +851,44 @@ class _CarbonFootprintQuestionsScreenState
                       }
                     },
                     child: Text('Calculate your footprint',
-                        style: TextStyle(fontSize: fontSize))),
+                        style: TextStyle(
+                            fontSize: fontSize,
+                            shadows: [globalShadowText()]))),
               ),
+              //Result text
               Padding(
-                padding: const EdgeInsets.all(15.0),
+                padding:
+                    const EdgeInsets.only(top: 25.0, left: 32.0, right: 32.0),
                 child: Text(
                   result,
                   style: TextStyle(
-                      fontSize: fontSize, fontWeight: FontWeight.bold),
+                      fontSize: fontSize,
+                      fontWeight: FontWeight.bold,
+                      shadows: [globalShadowText()]),
                 ),
               ),
+              //Rating text
               Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: Text(
-                  rating,
-                  style: TextStyle(
-                      fontSize: fontSize, fontWeight: FontWeight.bold),
-                ),
+                padding:
+                    const EdgeInsets.only(top: 5.0, left: 32.0, right: 32.0),
+                child: Container(child: rating),
               ),
+              //Rating animation
               Padding(
-                padding: const EdgeInsets.all(15.0),
+                padding:
+                    const EdgeInsets.only(top: 20.0, left: 32.0, right: 32.0),
+                child: animation,
+              ),
+              //Improvement suggestions
+              Padding(
+                padding:
+                    const EdgeInsets.only(top: 20.0, left: 32.0, right: 32.0),
                 child: Text(
                   improvementSuggestionsFormatted,
                   style: TextStyle(
-                      fontSize: fontSize, fontWeight: FontWeight.bold),
+                      fontSize: fontSize,
+                      fontWeight: FontWeight.bold,
+                      shadows: [globalShadowText()]),
                 ),
               ),
             ]),
@@ -624,7 +987,8 @@ class _CarbonFootprintQuestionsScreenState
         resultsInput.dishwasherInput,
         resultsInput.householdPurchasesInput,
         resultsInput.numberOfWheelieBinsFilledInput,
-        getRecyclingOptionsAsString(recyclingOptionsCheckboxes),
+        QuestionsCalculations.getRecyclingOptionsAsString(
+            recyclingOptionsCheckboxes),
         resultsInput.personalVehicleUsageInput,
         resultsInput.publicTransportUsageInput,
         resultsInput.flightsUsageInput,
@@ -643,42 +1007,36 @@ class _CarbonFootprintQuestionsScreenState
         0.0);
 
     //Calculate and update the carbon emissions value based on the inputs
-    double carbonEmissionsValue = 
-      QuestionsCalculations.calculateCarbonEmissionsValue(results);
+    double carbonEmissionsValue =
+        QuestionsCalculations.calculateCarbonEmissionsValue(results);
     results.carbonEmissionsScore = carbonEmissionsValue;
 
     setState(() {
+      animation = QuestionsCalculations.getAnimation(carbonFootprintRating);
       result = 'Your carbon footprint score is $carbonFootprintResult \n';
-      rating = 'Your carbon footprint rating is $carbonFootprintRating';
+      rating = RichText(
+          text: TextSpan(children: <TextSpan>[
+        TextSpan(
+            text: 'Your carbon footprint rating is ',
+            style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+                fontSize: fontSize,
+                shadows: [globalShadowText()])),
+        TextSpan(
+            text: carbonFootprintRating,
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: fontSize,
+                color: QuestionsCalculations.getColourFromRating(
+                    carbonFootprintRating),
+                shadows: [globalShadowText()])),
+      ]));
       improvementSuggestionsFormatted =
           'To improve your score and rating further, consider doing the following:\n'
           '$improvementSuggestionsString';
     });
 
     return results;
-  }
-
-  //!!!!!!!Move to the questions calculation clas???????
-  static getRecyclingOptionsAsString(Map<String, bool?> recyclingOptions) {
-    String recyclingOptionsAsString = '';
-    if (recyclingOptions['Glass'] == true) {
-      recyclingOptionsAsString = '$recyclingOptionsAsString\n   Glass';
-    }
-    if (recyclingOptions['Plastic'] == true) {
-      recyclingOptionsAsString = '$recyclingOptionsAsString\n   Plastic';
-    }
-    if (recyclingOptions['Paper'] == true) {
-      recyclingOptionsAsString = '$recyclingOptionsAsString\n   Paper';
-    }
-    if (recyclingOptions['Aluminum'] == true) {
-      recyclingOptionsAsString = '$recyclingOptionsAsString\n   Aluminum';
-    }
-    if (recyclingOptions['Steel'] == true) {
-      recyclingOptionsAsString = '$recyclingOptionsAsString\n   Steel';
-    }
-    if (recyclingOptions['Food waste'] == true) {
-      recyclingOptionsAsString = '$recyclingOptionsAsString\n   Food waste';
-    }
-    return recyclingOptionsAsString;
   }
 }

@@ -6,7 +6,8 @@ import '../screens/questions_screen.dart';
 import '../screens/intro_screen.dart';
 import '../screens/results_screen.dart';
 
-//Class to create the menu drawer which will be available on all pages
+//Class to create the menu drawer which will be available on all pages (except
+//the login and registration pages)
 class MenuDrawer extends StatelessWidget {
   const MenuDrawer({super.key});
 
@@ -17,6 +18,7 @@ class MenuDrawer extends StatelessWidget {
     );
   }
 
+  //Method to build the menu items in the app
   List<Widget> buildMenuItems(BuildContext context) {
     List<String> menuTitles = [
       'Home',

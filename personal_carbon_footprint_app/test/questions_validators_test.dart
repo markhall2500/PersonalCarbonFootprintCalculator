@@ -1,6 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:personal_carbon_footprint_app/helpers/questions_validators.dart';
 
+//This class is checking that the validators are working correctly
+//on the carbon footprint questions page when users are entering blank or
+//invalid options 
 void main() {
   group(
     'Number of people in house validator -',
@@ -61,7 +64,7 @@ void main() {
       test('value not selected by user', () {
         final result =
             QuestionsValidators.houseSizeValidator(
-              'Please select your house size');
+              'House size');
         expect(result, 'Please select an option');
       });
 
@@ -91,7 +94,7 @@ void main() {
       test('value not selected by user', () {
         final result =
             QuestionsValidators.foodHabitsValidator(
-              'Please select your food habits');
+              'Food habits');
         expect(result, 'Please select an option');
       });
 
@@ -121,14 +124,14 @@ void main() {
       test('value not selected by user', () {
         final result =
             QuestionsValidators.foodPackagingUseValidator(
-              'Please select your food packaging use');
+              'Food packaging usage');
         expect(result, 'Please select an option');
       });
 
       test('value selected by user', () {
         final result =
             QuestionsValidators.foodPackagingUseValidator(
-              'Mostly Prepackaged convienience food items');
+              'Mostly Prepackaged food');
         expect(result, null);
       });
     },
@@ -152,7 +155,7 @@ void main() {
       test('value not selected by user', () {
         final result =
             QuestionsValidators.washingMachineUsageValidator(
-              'How often do you use your washing machine?');
+              'Washing machine usage');
         expect(result, 'Please select an option');
       });
 
@@ -183,7 +186,7 @@ void main() {
       test('value not selected by user', () {
         final result =
             QuestionsValidators.dishwasherUsageValidator(
-              'How often do you use your dishwasher?');
+              'Dishwasher usage');
         expect(result, 'Please select an option');
       });
 
@@ -214,7 +217,7 @@ void main() {
       test('value not selected by user', () {
         final result =
             QuestionsValidators.newHouseholdItemsValidator(
-              'How many new household items do you buy per year?');
+              'New household items per year');
         expect(result, 'Please select an option');
       });
 

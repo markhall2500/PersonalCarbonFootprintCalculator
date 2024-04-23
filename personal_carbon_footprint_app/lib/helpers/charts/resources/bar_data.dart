@@ -2,6 +2,8 @@ import 'package:personal_carbon_footprint_app/data/results.dart';
 import 'package:personal_carbon_footprint_app/data/sp_helper.dart';
 import 'package:personal_carbon_footprint_app/helpers/charts/resources/individual_bar.dart';
 
+//This class generates the data to be used on the top 3 contributors bar chart
+//on the results page
 class BarData {
   final SPHelper helper = SPHelper();
   List<IndividualBar> barDataTest = [];
@@ -10,6 +12,7 @@ class BarData {
   void intialiseBarData() {
     Results lastResult = helper.getResultsForLoggedInUser().last;
 
+    //A collection of the question scores for the last result
     var scores = { 
     'People in home' : lastResult.numberOfPeopleInHomeScore,
     'House size' : lastResult.houseSizeScore,
@@ -25,14 +28,16 @@ class BarData {
     'Flight miles' : lastResult.flightMilesScore,
     };
 
+    //Sort the scores in order
     var sortedScores = Map.fromEntries(
     scores.entries.toList()
     ..sort((e1, e2) => e1.value.compareTo(e2.value)));
 
+    //Create a list to present the top 3 contributors
     barDataTest = [
-      IndividualBar(x: 0, y: sortedScores.values.elementAt(11) as double),
-      IndividualBar(x: 1, y: sortedScores.values.elementAt(10) as double),
-      IndividualBar(x: 2, y: sortedScores.values.elementAt(9) as double),
+      IndividualBar(x: 0, y: sortedScores.values.elementAt(11).toDouble()),
+      IndividualBar(x: 1, y: sortedScores.values.elementAt(10).toDouble()),
+      IndividualBar(x: 2, y: sortedScores.values.elementAt(9).toDouble()),
     ];
   }
 }

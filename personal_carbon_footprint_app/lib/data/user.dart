@@ -1,3 +1,6 @@
+//This class stores the model for a user object when a user registers
+//on the registration page. This class is used for user authentication
+
 class User {
   int id = 0;
   String username = '';

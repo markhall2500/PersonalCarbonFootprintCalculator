@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:personal_carbon_footprint_app/data/sp_helper.dart';
 import 'package:personal_carbon_footprint_app/helpers/charts/resources/line_data.dart';
 
+//This class generates the chart based on percentage split over the questions
+//answered on the carbon footprint questions page
 class TenPreviousResultsGraph extends StatefulWidget {
   const TenPreviousResultsGraph({Key? key}) : super(key: key);
 
@@ -10,6 +12,7 @@ class TenPreviousResultsGraph extends StatefulWidget {
   State<TenPreviousResultsGraph> createState() => _LineChartWidgetState();
 }
 
+//Building of the Line chart on the results page for the last 10 results performed
 class _LineChartWidgetState extends State<TenPreviousResultsGraph> {
   late int showingTooltipSpot;
   final SPHelper helper = SPHelper();
@@ -34,6 +37,12 @@ class _LineChartWidgetState extends State<TenPreviousResultsGraph> {
           maxY: 200,
           minX: 9,
           maxX: 0,
+          lineTouchData: const LineTouchData(
+            touchTooltipData: LineTouchTooltipData(
+              fitInsideHorizontally: true,
+              tooltipBgColor: Colors.white,
+            )
+          ),
           lineBarsData: [
             LineChartBarData(
                 spots: lineDataList

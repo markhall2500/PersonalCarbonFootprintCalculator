@@ -5,10 +5,13 @@ import 'package:personal_carbon_footprint_app/data/sp_helper.dart';
 import 'package:personal_carbon_footprint_app/helpers/charts/resources/chart_colors.dart';
 import 'package:personal_carbon_footprint_app/shared/globals.dart';
 
+//This class generates the chart based on points split over the questions
+//answered on the carbon footprint questions page
 class PointsPerQuestionChart {
   final SPHelper helper = SPHelper();
   final double fontSize = 14;
   
+  //Generation of the pie chart results screen entry
   List<PieChartSectionData> chartShowingSections(List<Results> results, touchedIndex) {
     List<Results> results = helper.getResultsForLoggedInUser();
     if (isLoggedIn && results.isNotEmpty) {
@@ -21,7 +24,8 @@ class PointsPerQuestionChart {
           case 0:
             return PieChartSectionData(
               color: ChartColors.contentColorBlue,
-              value: results.last.numberOfPeopleInHomeScore as double,
+              title: results.last.numberOfPeopleInHomeScore.toStringAsFixed(0),
+              value: results.last.numberOfPeopleInHomeScore.toDouble(),
               radius: radius,
               titleStyle: TextStyle(
                 fontSize: fontSize,
@@ -33,7 +37,8 @@ class PointsPerQuestionChart {
           case 1:
             return PieChartSectionData(
               color: ChartColors.contentColorYellow,
-              value: results.last.houseSizeScore as double,
+              title: results.last.houseSizeScore.toStringAsFixed(0),
+              value: results.last.houseSizeScore.toDouble(),
               radius: radius,
               titleStyle: TextStyle(
                 fontSize: fontSize,
@@ -45,7 +50,8 @@ class PointsPerQuestionChart {
           case 2:
             return PieChartSectionData(
               color: ChartColors.contentColorPurple,
-              value: results.last.foodHabitsScore as double,
+              title: results.last.foodHabitsScore.toStringAsFixed(0),
+              value: results.last.foodHabitsScore.toDouble(),
               radius: radius,
               titleStyle: TextStyle(
                 fontSize: fontSize,
@@ -57,7 +63,8 @@ class PointsPerQuestionChart {
           case 3:
             return PieChartSectionData(
               color: ChartColors.contentColorLightGreen,
-              value: results.last.packagingUseScore as double,
+              title: results.last.packagingUseScore.toStringAsFixed(0),
+              value: results.last.packagingUseScore.toDouble(),
               radius: radius,
               titleStyle: TextStyle(
                 fontSize: fontSize,
@@ -69,7 +76,8 @@ class PointsPerQuestionChart {
           case 4:
             return PieChartSectionData(
               color: ChartColors.contentColorBlack,
-              value: results.last.washingMachineUsageScore as double,
+              title: results.last.washingMachineUsageScore.toStringAsFixed(0),
+              value: results.last.washingMachineUsageScore.toDouble(),
               radius: radius,
               titleStyle: TextStyle(
                 fontSize: fontSize,
@@ -81,7 +89,8 @@ class PointsPerQuestionChart {
           case 5:
             return PieChartSectionData(
               color: ChartColors.contentColorDarkRed,
-              value: results.last.wheelieBinsFilledScore as double,
+              title: results.last.wheelieBinsFilledScore.toStringAsFixed(0),
+              value: results.last.wheelieBinsFilledScore.toDouble(),
               radius: radius,
               titleStyle: TextStyle(
                 fontSize: fontSize,
@@ -93,7 +102,8 @@ class PointsPerQuestionChart {
           case 6:
             return PieChartSectionData(
               color: ChartColors.contentColorCyan,
-              value: results.last.dishwasherUsageScore as double,
+              title: results.last.dishwasherUsageScore.toStringAsFixed(0),
+              value: results.last.dishwasherUsageScore.toDouble(),
               radius: radius,
               titleStyle: TextStyle(
                 fontSize: fontSize,
@@ -105,7 +115,8 @@ class PointsPerQuestionChart {
           case 7:
             return PieChartSectionData(
               color: ChartColors.contentColorPink,
-              value: results.last.newHouseholdPurchasesScore as double,
+              title: results.last.newHouseholdPurchasesScore.toStringAsFixed(0),
+              value: results.last.newHouseholdPurchasesScore.toDouble(),
               radius: radius,
               titleStyle: TextStyle(
                 fontSize: fontSize,
@@ -117,7 +128,8 @@ class PointsPerQuestionChart {
           case 8:
             return PieChartSectionData(
               color: ChartColors.contentColorOrange,
-              value: results.last.personalVehicleMilesScore as double,
+              title: results.last.personalVehicleMilesScore.toStringAsFixed(0),
+              value: results.last.personalVehicleMilesScore.toDouble(),
               radius: radius,
               titleStyle: TextStyle(
                 fontSize: fontSize,
@@ -129,7 +141,8 @@ class PointsPerQuestionChart {
           case 9:
             return PieChartSectionData(
               color: ChartColors.contentColorDarkBlue,
-              value: results.last.publicTransportMilesScore as double,
+              title: results.last.publicTransportMilesScore.toStringAsFixed(0),
+              value: results.last.publicTransportMilesScore.toDouble(),
               radius: radius,
               titleStyle: TextStyle(
                 fontSize: fontSize,
@@ -141,7 +154,8 @@ class PointsPerQuestionChart {
           case 10:
             return PieChartSectionData(
               color: ChartColors.contentColorDarkGreen,
-              value: results.last.typesOfRecyclingScore as double,
+              title: results.last.typesOfRecyclingScore.toStringAsFixed(0),
+              value: results.last.typesOfRecyclingScore.toDouble(),
               radius: radius,
               titleStyle: TextStyle(
                 fontSize: fontSize,
@@ -153,7 +167,8 @@ class PointsPerQuestionChart {
           case 11:
             return PieChartSectionData(
               color: ChartColors.contentColorLightRed,
-              value: results.last.flightMilesScore as double,
+              title: results.last.flightMilesScore.toStringAsFixed(0),
+              value: results.last.flightMilesScore.toDouble(),
               radius: radius,
               titleStyle: TextStyle(
                 fontSize: fontSize,

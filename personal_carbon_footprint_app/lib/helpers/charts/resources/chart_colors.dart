@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+//Class to provide a set of default colours which can be used for the charts
+//in the app
 class ChartColors {
   static const Color mainTextColor = Colors.white;
   static const Color contentColorBlack = Colors.black;

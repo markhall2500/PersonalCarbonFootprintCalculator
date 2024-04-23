@@ -2,7 +2,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:personal_carbon_footprint_app/data/results.dart';
 import 'package:personal_carbon_footprint_app/data/sp_helper.dart';
-import 'package:personal_carbon_footprint_app/helpers/charts/percentages_per_questoin_chart.dart';
+import 'package:personal_carbon_footprint_app/helpers/charts/percentages_per_question_chart.dart';
 import 'package:personal_carbon_footprint_app/helpers/charts/points_per_question_chart.dart';
 import 'package:personal_carbon_footprint_app/helpers/custom_visibility.dart';
 import 'package:personal_carbon_footprint_app/shared/globals.dart';
@@ -14,6 +14,8 @@ import '../helpers/charts/indicator.dart';
 import '../helpers/charts/ten_previous_results_graph.dart';
 import '../helpers/charts/resources/chart_colors.dart';
 
+//This class generates the screen which contains the results from the users
+//previous completions of the carbon footprint question results
 class ResultsScreen extends StatefulWidget {
   const ResultsScreen({super.key});
 
@@ -48,11 +50,14 @@ class _ResultsScreenState extends State<ResultsScreen> {
         child: SingleChildScrollView(
           child: Column(children: [
             //Title for the page
-            const Padding(
-              padding: EdgeInsets.all(28.0),
+            Padding(
+              padding: const EdgeInsets.all(28.0),
               child: Text(
                 'Your personal results',
-                style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                    shadows: [globalShadowText()]),
               ),
             ),
             //CO2 emissions value for latest result
@@ -66,11 +71,14 @@ class _ResultsScreenState extends State<ResultsScreen> {
             CustomVisibility(
               conditions: [isLoggedIn ? true : false, results.isNotEmpty],
               child: Padding(
-                padding: const EdgeInsets.all(28.0),
+                padding: const EdgeInsets.only(
+                    top: 34.0, left: 32.0, right: 32.0, bottom: 2.0),
                 child: Text(
                   'How is your latest rating calculated in points',
                   style: TextStyle(
-                      fontSize: fontSize, fontWeight: FontWeight.bold),
+                      fontSize: fontSize,
+                      fontWeight: FontWeight.bold,
+                      shadows: [globalShadowText()]),
                 ),
               ),
             ),
@@ -78,7 +86,8 @@ class _ResultsScreenState extends State<ResultsScreen> {
             CustomVisibility(
               conditions: [isLoggedIn ? true : false, results.isNotEmpty],
               child: Padding(
-                padding: const EdgeInsets.all(28.0),
+                padding: const EdgeInsets.only(
+                    top: 28.0, left: 8.0, right: 8.0, bottom: 28.0),
                 child: AspectRatio(
                   aspectRatio: 1.3,
                   child: Row(
@@ -118,109 +127,112 @@ class _ResultsScreenState extends State<ResultsScreen> {
                           ),
                         ),
                       ),
-                      const Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Indicator(
-                            color: ChartColors.contentColorBlue,
-                            text: 'People in home',
-                            isSquare: true,
-                          ),
-                          SizedBox(
-                            height: 4,
-                          ),
-                          Indicator(
-                            color: ChartColors.contentColorYellow,
-                            text: 'House size',
-                            isSquare: true,
-                          ),
-                          SizedBox(
-                            height: 4,
-                          ),
-                          Indicator(
-                            color: ChartColors.contentColorPurple,
-                            text: 'Food habits',
-                            isSquare: true,
-                          ),
-                          SizedBox(
-                            height: 4,
-                          ),
-                          Indicator(
-                            color: ChartColors.contentColorLightGreen,
-                            text: 'Food packaging use',
-                            isSquare: true,
-                          ),
-                          SizedBox(
-                            height: 4,
-                          ),
-                          Indicator(
-                            color: ChartColors.contentColorBlack,
-                            text: 'Washing machine use',
-                            isSquare: true,
-                          ),
-                          SizedBox(
-                            height: 4,
-                          ),
-                          Indicator(
-                            color: ChartColors.contentColorDarkRed,
-                            text: 'Wheelie bins filled',
-                            isSquare: true,
-                          ),
-                          SizedBox(
-                            height: 4,
-                          ),
-                          Indicator(
-                            color: ChartColors.contentColorCyan,
-                            text: 'Dishwasher use',
-                            isSquare: true,
-                          ),
-                          SizedBox(
-                            height: 4,
-                          ),
-                          Indicator(
-                            color: ChartColors.contentColorPink,
-                            text: 'New household items',
-                            isSquare: true,
-                          ),
-                          SizedBox(
-                            height: 4,
-                          ),
-                          Indicator(
-                            color: ChartColors.contentColorOrange,
-                            text: 'Personal vehicle miles',
-                            isSquare: true,
-                          ),
-                          SizedBox(
-                            height: 4,
-                          ),
-                          Indicator(
-                            color: ChartColors.contentColorDarkBlue,
-                            text: 'Public transport miles',
-                            isSquare: true,
-                          ),
-                          SizedBox(
-                            height: 4,
-                          ),
-                          Indicator(
-                            color: ChartColors.contentColorDarkGreen,
-                            text: 'Recycling options',
-                            isSquare: true,
-                          ),
-                          SizedBox(
-                            height: 4,
-                          ),
-                          Indicator(
-                            color: ChartColors.contentColorLightRed,
-                            text: 'Flight miles',
-                            isSquare: true,
-                          ),
-                          SizedBox(
-                            height: 18,
-                          ),
-                        ],
+                      const SingleChildScrollView(
+                        physics: NeverScrollableScrollPhysics(),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Indicator(
+                              color: ChartColors.contentColorBlue,
+                              text: 'People in home',
+                              isSquare: true,
+                            ),
+                            SizedBox(
+                              height: 3,
+                            ),
+                            Indicator(
+                              color: ChartColors.contentColorYellow,
+                              text: 'House size',
+                              isSquare: true,
+                            ),
+                            SizedBox(
+                              height: 3,
+                            ),
+                            Indicator(
+                              color: ChartColors.contentColorPurple,
+                              text: 'Food habits',
+                              isSquare: true,
+                            ),
+                            SizedBox(
+                              height: 3,
+                            ),
+                            Indicator(
+                              color: ChartColors.contentColorLightGreen,
+                              text: 'Food packaging',
+                              isSquare: true,
+                            ),
+                            SizedBox(
+                              height: 3,
+                            ),
+                            Indicator(
+                              color: ChartColors.contentColorBlack,
+                              text: 'Washing machine',
+                              isSquare: true,
+                            ),
+                            SizedBox(
+                              height: 3,
+                            ),
+                            Indicator(
+                              color: ChartColors.contentColorDarkRed,
+                              text: 'Bins filled',
+                              isSquare: true,
+                            ),
+                            SizedBox(
+                              height: 3,
+                            ),
+                            Indicator(
+                              color: ChartColors.contentColorCyan,
+                              text: 'Dishwasher use',
+                              isSquare: true,
+                            ),
+                            SizedBox(
+                              height: 3,
+                            ),
+                            Indicator(
+                              color: ChartColors.contentColorPink,
+                              text: 'New purchases',
+                              isSquare: true,
+                            ),
+                            SizedBox(
+                              height: 3,
+                            ),
+                            Indicator(
+                              color: ChartColors.contentColorOrange,
+                              text: 'Personal miles',
+                              isSquare: true,
+                            ),
+                            SizedBox(
+                              height: 3,
+                            ),
+                            Indicator(
+                              color: ChartColors.contentColorDarkBlue,
+                              text: 'Public miles',
+                              isSquare: true,
+                            ),
+                            SizedBox(
+                              height: 3,
+                            ),
+                            Indicator(
+                              color: ChartColors.contentColorDarkGreen,
+                              text: 'Recycling',
+                              isSquare: true,
+                            ),
+                            SizedBox(
+                              height: 3,
+                            ),
+                            Indicator(
+                              color: ChartColors.contentColorLightRed,
+                              text: 'Flight miles',
+                              isSquare: true,
+                            ),
+                            SizedBox(
+                              height: 18,
+                            ),
+                          ],
+                        ),
                       ),
-                      const SizedBox(
+                       const SizedBox(
                         width: 28,
                       ),
                     ],
@@ -232,11 +244,14 @@ class _ResultsScreenState extends State<ResultsScreen> {
             CustomVisibility(
               conditions: [isLoggedIn ? true : false, results.isNotEmpty],
               child: Padding(
-                padding: const EdgeInsets.all(28.0),
+                padding: const EdgeInsets.only(
+                    top: 28.0, left: 32.0, right: 32.0, bottom: 2.0),
                 child: Text(
                   'What are the top 3 contributors to the score',
                   style: TextStyle(
-                      fontSize: fontSize, fontWeight: FontWeight.bold),
+                      fontSize: fontSize,
+                      fontWeight: FontWeight.bold,
+                      shadows: [globalShadowText()]),
                 ),
               ),
             ),
@@ -250,23 +265,27 @@ class _ResultsScreenState extends State<ResultsScreen> {
                     child: TopThreeContributorsChart(),
                   )),
             ),
-            //Chart 3 - Rating calculated in precentage text
+            //Chart 3 - Rating calculated in percentage text
             CustomVisibility(
               conditions: [isLoggedIn ? true : false, results.isNotEmpty],
               child: Padding(
-                padding: const EdgeInsets.all(28.0),
+                padding: const EdgeInsets.only(
+                    top: 42.0, left: 32.0, right: 32.0, bottom: 2.0),
                 child: Text(
                   'How is your latest rating calculated in percentages',
                   style: TextStyle(
-                      fontSize: fontSize, fontWeight: FontWeight.bold),
+                      fontSize: fontSize,
+                      fontWeight: FontWeight.bold,
+                      shadows: [globalShadowText()]),
                 ),
               ),
             ),
-            //Chart 3 - Rating calculated in precentage
+            //Chart 3 - Rating calculated in percentage
             CustomVisibility(
               conditions: [isLoggedIn ? true : false, results.isNotEmpty],
               child: Padding(
-                padding: const EdgeInsets.all(28.0),
+                padding: const EdgeInsets.only(
+                    top: 28.0, left: 8.0, right: 8.0, bottom: 28.0),
                 child: AspectRatio(
                   aspectRatio: 1.3,
                   child: Row(
@@ -301,113 +320,116 @@ class _ResultsScreenState extends State<ResultsScreen> {
                               sectionsSpace: 0,
                               centerSpaceRadius: 40,
                               sections: PercentagesPerQuestionChart()
-                                  .thirdChartShowingSections(
+                                  .percentagesPerQuestionChartShowingSections(
                                       results, touchedIndex),
                             ),
                           ),
                         ),
                       ),
-                      const Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Indicator(
-                            color: ChartColors.contentColorBlue,
-                            text: 'People in home',
-                            isSquare: true,
-                          ),
-                          SizedBox(
-                            height: 4,
-                          ),
-                          Indicator(
-                            color: ChartColors.contentColorYellow,
-                            text: 'House size',
-                            isSquare: true,
-                          ),
-                          SizedBox(
-                            height: 4,
-                          ),
-                          Indicator(
-                            color: ChartColors.contentColorPurple,
-                            text: 'Food habits',
-                            isSquare: true,
-                          ),
-                          SizedBox(
-                            height: 4,
-                          ),
-                          Indicator(
-                            color: ChartColors.contentColorLightGreen,
-                            text: 'Food packaging use',
-                            isSquare: true,
-                          ),
-                          SizedBox(
-                            height: 4,
-                          ),
-                          Indicator(
-                            color: ChartColors.contentColorBlack,
-                            text: 'Washing machine use',
-                            isSquare: true,
-                          ),
-                          SizedBox(
-                            height: 4,
-                          ),
-                          Indicator(
-                            color: ChartColors.contentColorDarkRed,
-                            text: 'Wheelie bins filled',
-                            isSquare: true,
-                          ),
-                          SizedBox(
-                            height: 4,
-                          ),
-                          Indicator(
-                            color: ChartColors.contentColorCyan,
-                            text: 'Dishwasher use',
-                            isSquare: true,
-                          ),
-                          SizedBox(
-                            height: 4,
-                          ),
-                          Indicator(
-                            color: ChartColors.contentColorPink,
-                            text: 'New household items',
-                            isSquare: true,
-                          ),
-                          SizedBox(
-                            height: 4,
-                          ),
-                          Indicator(
-                            color: ChartColors.contentColorOrange,
-                            text: 'Personal vehicle miles',
-                            isSquare: true,
-                          ),
-                          SizedBox(
-                            height: 4,
-                          ),
-                          Indicator(
-                            color: ChartColors.contentColorDarkBlue,
-                            text: 'Public transport miles',
-                            isSquare: true,
-                          ),
-                          SizedBox(
-                            height: 4,
-                          ),
-                          Indicator(
-                            color: ChartColors.contentColorDarkGreen,
-                            text: 'Recycling options',
-                            isSquare: true,
-                          ),
-                          SizedBox(
-                            height: 4,
-                          ),
-                          Indicator(
-                            color: ChartColors.contentColorLightRed,
-                            text: 'Flight miles',
-                            isSquare: true,
-                          ),
-                          SizedBox(
-                            height: 18,
-                          ),
-                        ],
+                      const SingleChildScrollView(
+                        physics: NeverScrollableScrollPhysics(),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Indicator(
+                              color: ChartColors.contentColorBlue,
+                              text: 'People in home',
+                              isSquare: true,
+                            ),
+                            SizedBox(
+                              height: 3,
+                            ),
+                            Indicator(
+                              color: ChartColors.contentColorYellow,
+                              text: 'House size',
+                              isSquare: true,
+                            ),
+                            SizedBox(
+                              height: 3,
+                            ),
+                            Indicator(
+                              color: ChartColors.contentColorPurple,
+                              text: 'Food habits',
+                              isSquare: true,
+                            ),
+                            SizedBox(
+                              height: 3,
+                            ),
+                            Indicator(
+                              color: ChartColors.contentColorLightGreen,
+                              text: 'Food packaging',
+                              isSquare: true,
+                            ),
+                            SizedBox(
+                              height: 3,
+                            ),
+                            Indicator(
+                              color: ChartColors.contentColorBlack,
+                              text: 'Washing machine',
+                              isSquare: true,
+                            ),
+                            SizedBox(
+                              height: 3,
+                            ),
+                            Indicator(
+                              color: ChartColors.contentColorDarkRed,
+                              text: 'Bins filled',
+                              isSquare: true,
+                            ),
+                            SizedBox(
+                              height: 3,
+                            ),
+                            Indicator(
+                              color: ChartColors.contentColorCyan,
+                              text: 'Dishwasher use',
+                              isSquare: true,
+                            ),
+                            SizedBox(
+                              height: 3,
+                            ),
+                            Indicator(
+                              color: ChartColors.contentColorPink,
+                              text: 'New purchases',
+                              isSquare: true,
+                            ),
+                            SizedBox(
+                              height: 3,
+                            ),
+                            Indicator(
+                              color: ChartColors.contentColorOrange,
+                              text: 'Personal miles',
+                              isSquare: true,
+                            ),
+                            SizedBox(
+                              height: 3,
+                            ),
+                            Indicator(
+                              color: ChartColors.contentColorDarkBlue,
+                              text: 'Public miles',
+                              isSquare: true,
+                            ),
+                            SizedBox(
+                              height: 3,
+                            ),
+                            Indicator(
+                              color: ChartColors.contentColorDarkGreen,
+                              text: 'Recycling',
+                              isSquare: true,
+                            ),
+                            SizedBox(
+                              height: 3,
+                            ),
+                            Indicator(
+                              color: ChartColors.contentColorLightRed,
+                              text: 'Flight miles',
+                              isSquare: true,
+                            ),
+                            SizedBox(
+                              height: 18,
+                            ),
+                          ],
+                        ),
                       ),
                       const SizedBox(
                         width: 28,
@@ -421,11 +443,14 @@ class _ResultsScreenState extends State<ResultsScreen> {
             CustomVisibility(
               conditions: [isLoggedIn ? true : false, results.isNotEmpty],
               child: Padding(
-                padding: const EdgeInsets.all(28.0),
+                padding: const EdgeInsets.only(
+                    top: 28.0, left: 32.0, right: 32.0, bottom: 2.0),
                 child: Text(
                   'Your total score over the last 10 completed results',
                   style: TextStyle(
-                      fontSize: fontSize, fontWeight: FontWeight.bold),
+                      fontSize: fontSize,
+                      fontWeight: FontWeight.bold,
+                      shadows: [globalShadowText()]),
                 ),
               ),
             ),
@@ -433,57 +458,77 @@ class _ResultsScreenState extends State<ResultsScreen> {
             CustomVisibility(
               conditions: [isLoggedIn ? true : false, results.isNotEmpty],
               child: const Padding(
-                  padding: EdgeInsets.all(28.0),
+                  padding: EdgeInsets.only(
+                    top: 28.0, left: 25.0, right: 30.0, bottom: 28.0),
                   child: SizedBox(
                     child: TenPreviousResultsGraph(),
                   )),
             ),
-            //List of previous results text
+            //List of last 10 previous results text
             CustomVisibility(
               conditions: [isLoggedIn ? true : false, results.isNotEmpty],
               child: Padding(
-                padding: const EdgeInsets.all(28.0),
+                padding: const EdgeInsets.only(
+                    top: 28.0, left: 32.0, right: 32.0, bottom: 2.0),
                 child: Text(
                   'Your last 10 previous results',
                   style: TextStyle(
-                      fontSize: fontSize, fontWeight: FontWeight.bold),
+                      fontSize: fontSize,
+                      fontWeight: FontWeight.bold,
+                      shadows: [globalShadowText()]),
                 ),
               ),
             ),
-            //List of previous results
+            //List of last 10 previous results
             Padding(
               padding: const EdgeInsets.all(28.0),
               child: ListView(
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
-                  //padding: const EdgeInsets.all(15.0),
                   children: getContent()),
+            ),
+            //Suggest a new question text header
+            Padding(
+              padding: const EdgeInsets.only(
+                  top: 30.0, left: 32.0, right: 32.0, bottom: 2.0),
+              child: Text('Want to add a new question to our question set?',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: fontSize,
+                      shadows: [globalShadowText()])),
             ),
             //Suggest a new question text
             Padding(
-              padding: const EdgeInsets.all(28.0),
-              child: Text(
-                  'Want to add a new question to our question set? \nWhy not send us an email via the link below',
-                  style: TextStyle(fontSize: fontSize)),
+              padding: const EdgeInsets.only(
+                  top: 2.0, left: 32.0, right: 32.0, bottom: 2.0),
+              child: Text('Why not send us an email via the link below',
+                  style: TextStyle(
+                      fontSize: fontSize, shadows: [globalShadowText()])),
             ),
             //Suggest a new question link
             Padding(
-              padding: const EdgeInsets.all(10.0),
+              padding: const EdgeInsets.only(
+                  top: 18.0, left: 32.0, right: 32.0, bottom: 60.0),
               child: ElevatedButton(
                   onPressed: () {
                     suggestQuestionViaEmail();
                   },
                   child: Text('Suggest a question',
-                      style: TextStyle(fontSize: fontSize))),
+                      style: TextStyle(
+                          fontSize: fontSize, shadows: [globalShadowText()]))),
             ),
             //CO2 emissions disclaimer
             CustomVisibility(
               conditions: [isLoggedIn ? true : false, results.isNotEmpty],
-              child: const Padding(
-                padding: EdgeInsets.all(28.0),
+              child: Padding(
+                padding: const EdgeInsets.only(
+                    top: 35.0, left: 32.0, right: 32.0, bottom: 50.0),
                 child: Text(
                   '*Your CO2 emissions result is an estimate only. It is based on answered questions only (except number of people in the home and house size), averages and publicly available data',
-                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      shadows: [globalShadowText()]),
                 ),
               ),
             ),
@@ -500,13 +545,24 @@ class _ResultsScreenState extends State<ResultsScreen> {
     //Orders the results to add the latest one to the top
     results.sort((a, b) => b.timestamp.compareTo(a.timestamp));
     if (!isLoggedIn) {
-      tiles.add(const ListTile(
-          title: Text('You must login to see your previous results')));
+      tiles.add(ListTile(
+          title: Text('You must login to see your previous results',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  fontSize: fontSize,
+                  fontWeight: FontWeight.bold,
+                  shadows: [globalShadowText()]))));
       return tiles;
       //If no previous results, show a message
     } else if (results.isEmpty) {
-      tiles.add(
-          const ListTile(title: Text('You do not have any previous results')));
+      tiles.add(ListTile(
+            title: Text('You do not have any previous results',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: fontSize,
+                  fontWeight: FontWeight.bold,
+                  shadows: [globalShadowText()]
+            ),)));
       return tiles;
     } else {
       int counter = 0;
@@ -547,19 +603,21 @@ class _ResultsScreenState extends State<ResultsScreen> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Result'),
-          content:
-              Text('No. of people in home: ${result.numberOfPeopleInHome}\n'
-                  'House size: ${result.houseSize}\n'
-                  'Food habits: ${result.foodHabits}\n'
-                  'Packaging use: ${result.packagingUse}\n'
-                  'Washing machine use: ${result.washingMachineUsage}\n'
-                  'Dishwasher use: ${result.dishwasherUsage}\n'
-                  'New household purchases: ${result.newHouseholdPurchases}\n'
-                  'Wheelie bins filled: ${result.wheelieBinsFilled}\n'
-                  'Types of recycling: ${result.typesOfRecycling}\n'
-                  'Personal vehicle miles: ${result.personalVehicleMiles}\n'
-                  'Public transport use: ${result.publicTransportMiles}\n'
-                  'Flight miles: ${result.flightMiles}\n'),
+          content: Text('Completion date: ${result.timestamp}\n'
+              'Score: ${result.score}\n'
+              'Rating: ${result.rating}\n'
+              'No. of people in home: ${result.numberOfPeopleInHome}\n'
+              'House size: ${result.houseSize}\n'
+              'Food habits: ${result.foodHabits}\n'
+              'Packaging use: ${result.packagingUse}\n'
+              'Washing machine use: ${result.washingMachineUsage}\n'
+              'Dishwasher use: ${result.dishwasherUsage}\n'
+              'New household purchases: ${result.newHouseholdPurchases}\n'
+              'Wheelie bins filled: ${result.wheelieBinsFilled}\n'
+              'Types of recycling: ${result.typesOfRecycling}\n'
+              'Personal vehicle miles: ${result.personalVehicleMiles}\n'
+              'Public transport use: ${result.publicTransportMiles}\n'
+              'Flight miles: ${result.flightMiles}\n'),
           //Close window button
           actions: <Widget>[
             TextButton(
@@ -594,13 +652,19 @@ class _ResultsScreenState extends State<ResultsScreen> {
     if (isLoggedIn && results.isNotEmpty) {
       return Text(
         'Your estimated CO2 emissions per week is ${results.last.carbonEmissionsScore.toStringAsFixed(2)}kg*',
-        style: TextStyle(fontSize: fontSize, fontWeight: FontWeight.bold),
+        style: TextStyle(
+            fontSize: fontSize,
+            fontWeight: FontWeight.bold,
+            shadows: [globalShadowText()]),
       );
     }
 
     return Text(
       'Your estimated CO2 emissions per week is 0.0',
-      style: TextStyle(fontSize: fontSize, fontWeight: FontWeight.bold),
+      style: TextStyle(
+          fontSize: fontSize,
+          fontWeight: FontWeight.bold,
+          shadows: [globalShadowText()]),
     );
   }
 }

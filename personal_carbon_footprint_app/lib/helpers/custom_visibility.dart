@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+//This class contians the model and visibility of results page widgets on the 
+//basis that the user is logged in and has existing results
 class CustomVisibility extends StatelessWidget {
   final List<bool> conditions;
   final Widget child;

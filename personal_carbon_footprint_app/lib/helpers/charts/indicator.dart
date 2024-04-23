@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+//This class stores an individual entry for a pie chart wedge used for the pie
+//charts on the results page
 class Indicator extends StatelessWidget {
   const Indicator({
     super.key,

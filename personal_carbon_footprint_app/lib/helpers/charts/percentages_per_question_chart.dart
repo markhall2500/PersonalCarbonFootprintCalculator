@@ -5,12 +5,16 @@ import 'package:personal_carbon_footprint_app/data/sp_helper.dart';
 import 'package:personal_carbon_footprint_app/helpers/charts/resources/chart_colors.dart';
 import 'package:personal_carbon_footprint_app/shared/globals.dart';
 
+//This class generates the chart based on percentage split over the questions
+//answered on the carbon footprint questions page
 class PercentagesPerQuestionChart {
   final SPHelper helper = SPHelper();
   final double fontSize = 14;
 
-  List<PieChartSectionData> thirdChartShowingSections(List<Results> results, touchedIndex) {
-    if (isLoggedIn && results.isNotEmpty) {
+  //Method to return the created by chart based on the last results data
+  List<PieChartSectionData> percentagesPerQuestionChartShowingSections(
+    List<Results> results, touchedIndex) {
+      if (isLoggedIn && results.isNotEmpty) {
       Results result = helper.getResultsForLoggedInUser().last;
 
       //The below ensures that count total 100% is displayed to the user
@@ -191,12 +195,7 @@ class PercentagesPerQuestionChart {
         totalPercentage++;
       }
 
-      //NOT NEEDED ANYMORE - HERE FOR REFERENCE AND CAN BE DELETED
-      //double houseSizePercent = double.parse(
-      //  ((result.houseSizeScore / carbonFootprintTotalScore) * 100)
-      //    .toStringAsFixed(0));
-
-      //Generation of the results screen
+      //Generation of the pie chart results screen entry
       return List.generate(12, (i) {
         final isTouched = i == touchedIndex;
         final fontSize = isTouched ? 25.0 : 16.0;
@@ -206,6 +205,7 @@ class PercentagesPerQuestionChart {
           case 0:
             return PieChartSectionData(
               color: ChartColors.contentColorBlue,
+              title: numberOfPeopleInHomePercent.toStringAsFixed(0),
               value: numberOfPeopleInHomePercent,
               radius: radius,
               titleStyle: TextStyle(
@@ -218,6 +218,7 @@ class PercentagesPerQuestionChart {
           case 1:
             return PieChartSectionData(
               color: ChartColors.contentColorYellow,
+              title: houseSizePercent.toStringAsFixed(0),
               value: houseSizePercent,
               radius: radius,
               titleStyle: TextStyle(
@@ -230,6 +231,7 @@ class PercentagesPerQuestionChart {
           case 2:
             return PieChartSectionData(
               color: ChartColors.contentColorPurple,
+              title: foodHabitsPercent.toStringAsFixed(0),
               value: foodHabitsPercent,
               radius: radius,
               titleStyle: TextStyle(
@@ -242,6 +244,7 @@ class PercentagesPerQuestionChart {
           case 3:
             return PieChartSectionData(
               color: ChartColors.contentColorLightGreen,
+              title: packagingUsePercent.toStringAsFixed(0),
               value: packagingUsePercent,
               radius: radius,
               titleStyle: TextStyle(
@@ -254,6 +257,7 @@ class PercentagesPerQuestionChart {
           case 4:
             return PieChartSectionData(
               color: ChartColors.contentColorBlack,
+              title: washingMachinePercent.toStringAsFixed(0),
               value: washingMachinePercent,
               radius: radius,
               titleStyle: TextStyle(
@@ -266,6 +270,7 @@ class PercentagesPerQuestionChart {
           case 5:
             return PieChartSectionData(
               color: ChartColors.contentColorDarkRed,
+              title: wheelieBinsPercent.toStringAsFixed(0),
               value: wheelieBinsPercent,
               radius: radius,
               titleStyle: TextStyle(
@@ -278,6 +283,7 @@ class PercentagesPerQuestionChart {
           case 6:
             return PieChartSectionData(
               color: ChartColors.contentColorCyan,
+              title: dishwasherPercent.toStringAsFixed(0),
               value: dishwasherPercent,
               radius: radius,
               titleStyle: TextStyle(
@@ -290,6 +296,7 @@ class PercentagesPerQuestionChart {
           case 7:
             return PieChartSectionData(
               color: ChartColors.contentColorPink,
+              title: newHouseholdPurchasesPercent.toStringAsFixed(0),
               value: newHouseholdPurchasesPercent,
               radius: radius,
               titleStyle: TextStyle(
@@ -302,6 +309,7 @@ class PercentagesPerQuestionChart {
           case 8:
             return PieChartSectionData(
               color: ChartColors.contentColorOrange,
+              title: personalVehicleMilesPercent.toStringAsFixed(0),
               value: personalVehicleMilesPercent,
               radius: radius,
               titleStyle: TextStyle(
@@ -314,6 +322,7 @@ class PercentagesPerQuestionChart {
           case 9:
             return PieChartSectionData(
               color: ChartColors.contentColorDarkBlue,
+              title: publicTransportMilesPercent.toStringAsFixed(0),
               value: publicTransportMilesPercent,
               radius: radius,
               titleStyle: TextStyle(
@@ -326,6 +335,7 @@ class PercentagesPerQuestionChart {
           case 10:
             return PieChartSectionData(
               color: ChartColors.contentColorDarkGreen,
+              title: typesOfRecyclingPercent.toStringAsFixed(0),
               value: typesOfRecyclingPercent,
               radius: radius,
               titleStyle: TextStyle(
@@ -338,6 +348,7 @@ class PercentagesPerQuestionChart {
           case 11:
             return PieChartSectionData(
               color: ChartColors.contentColorLightRed,
+              title: flightMilesPercent.toStringAsFixed(0),
               value: flightMilesPercent,
               radius: radius,
               titleStyle: TextStyle(
