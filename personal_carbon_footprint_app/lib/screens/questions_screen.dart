@@ -327,7 +327,9 @@ class _CarbonFootprintQuestionsScreenState
                                     color: const Color.fromRGBO(
                                         194, 121, 4, 0.996),
                                     shadows: [globalShadowText()])),
-                            const TextSpan(text: ' / '),
+                            const TextSpan(
+                                text: ' / ', 
+                                style: TextStyle(color : Colors.black)),
                             TextSpan(
                                 text: 'Silver',
                                 style: TextStyle(
