@@ -598,7 +598,7 @@ void main() {
           );
 
         final result = QuestionsCalculations.calculateCarbonEmissionsValue(testResult);
-        expect(result, 1296.68);
+        expect(result, 1293.31);
       });
     },
   );

@@ -482,13 +482,13 @@ class QuestionsCalculations {
     //Value for dishwasher use
     switch (result.dishwasherUsage) {
       case 'More than 9 times per week':
-        carbonEmissionsResultInKg = carbonEmissionsResultInKg + 8.8;
+        carbonEmissionsResultInKg = carbonEmissionsResultInKg + 5.43;
         break;
       case '4-9 times per week':
-        carbonEmissionsResultInKg = carbonEmissionsResultInKg + 5.28;
+        carbonEmissionsResultInKg = carbonEmissionsResultInKg + 3.26;
         break;
       case '1-3 times per week':
-        carbonEmissionsResultInKg = carbonEmissionsResultInKg + 1.76;
+        carbonEmissionsResultInKg = carbonEmissionsResultInKg + 1.08;
         break;
       case 'I do not own a washing machine':
         carbonEmissionsResultInKg = carbonEmissionsResultInKg + 0.0;
